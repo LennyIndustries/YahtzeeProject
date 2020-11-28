@@ -1,179 +1,181 @@
 /*
-* [Pas deze hoofding aan]
-* Authors: Vreys Frederik & Gilissen Koen
-* Date: 24/10/2019
-* Description: Start code voor blackjack spel
+* This file contains all the graphics used in Yahtzee Project
 */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <time.h>
-#include <string.h>
 
-#define AANTAL_DEMO_STENEN 5
-
-int showDie(char i);
-int dice1(char i);
-int dice2(char i);
-int dice3(char i);
-int dice4(char i);
-int dice5(char i);
-int dice6(char i);
-int throwDie();
+// Functions
+char rollRandomDie(void);
+char rollDie(char n);
+char dice1(char i);
+char dice2(char i);
+char dice3(char i);
+char dice4(char i);
+char dice5(char i);
+char dice6(char i);
 void printIntro(void);
 
-int main(void)
+/*
+* Rolls a random die.
+* @param: void
+* @return: char (die) What die was rolled as numeric value.
+*/
+char rollRandomDie(void)
 {
-	srand(time(NULL));
+	//srand(time(NULL));
+	unsigned char die = (rand() % 6) + 1;
 
-	//DEMO Code voor testen van kaarten
-        printIntro();
-	for(char i = 0; i < AANTAL_DEMO_STENEN; i++)
+	return rollDie(die);
+}
+
+/*
+* Rolls a givven die.
+* @param: die (char) What die was rolled.
+* @return: char (n) What die was rolled as numeric value.
+*/
+char rollDie(char n)
+{
+	char die = 0;
+
+	switch (n)
 	{
-		showDie(i+65);
+		case 1:
+			die = dice1(n);
+			break;
+		case 2:
+			die = dice2(n);
+			break;
+		case 3:
+			die = dice3(n);
+			break;
+		case 4:
+			die = dice4(n);
+			break;
+		case 5:
+			die = dice5(n);
+			break;
+		case 6:
+			die = dice6(n);
+			break;
+		default:
+			printf("An error occourt.\nFailed to roll a die (%i)", n);
+			break;
 	}
 
+	return die;
 }
 
-int showDie(char i)
+/*
+* All diceX have the same input and return.
+* Print a die and return the value.
+* @param: i (char) The numeric value of the die.
+* @return: char (n) What die was rolled as numeric value.
+*/
+char dice1(char i)
 {
-        int die = throwDie();
-        int eyes = 0;
-        switch (die)
-        {
-			case 1:
-					eyes = dice1(i);
-					break;
-			case 2:
-					eyes = dice2(i);
-					break;
-			case 3:
-					eyes = dice3(i);
-					break;
-			case 4:
-					eyes = dice4(i);
-					break;
-			case 5:
-					eyes = dice5(i);
-					break;
-			case 6:
-					eyes = dice6(i);
-					break;
-			default:
-					eyes = 0;
-					printf("Die off the tabel! Try again!");
-					break;
-        }
-        return eyes;
+	printf("      .-------------.    \n");
+	printf("     /             /|    \n");
+	printf("    /      o      / |    \n");
+	printf("   /_____________/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 1;
 }
 
-int throwDie()
+char dice2(char i)
 {
-        int getal = (rand() % 6) +1;
-        return getal;
+	printf("      .-------------.    \n");
+	printf("     /  o          /|    \n");
+	printf("    /             / |    \n");
+	printf("   /__________o__/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 2;
 }
 
-
-int dice1(char i)
+char dice3(char i)
 {
-        int a=0;
-        printf("      .-------------.    \n");
-		printf("     /             /|    \n");
-		printf("    /      o      / |    \n");
-		printf("   /_____________/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
+	printf("      .-------------.    \n");
+	printf("     /  o          /|    \n");
+	printf("    /      o      / |    \n");
+	printf("   /___________o_/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 3;
 }
 
-int dice2(char i)
+char dice4(char i)
 {
-        int a=2;
-        printf("      .-------------.    \n");
-		printf("     /  o          /|    \n");
-		printf("    /             / |    \n");
-		printf("   /__________o__/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
+	printf("      .-------------.    \n");
+	printf("     /  o       o  /|    \n");
+	printf("    /             / |    \n");
+	printf("   /__o________o_/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 4;
 }
 
-int dice3(char i)
+char dice5(char i)
 {
-        int a=3;
-        printf("      .-------------.    \n");
-		printf("     /  o          /|    \n");
-		printf("    /      o      / |    \n");
-		printf("   /___________o_/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
+	printf("      .-------------.    \n");
+	printf("     /  o       o  /|    \n");
+	printf("    /      o      / |    \n");
+	printf("   /__o_______o__/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 5;
 }
 
-int dice4(char i)
+char dice6(char i)
 {
-        int a=4;
-        printf("      .-------------.    \n");
-		printf("     /  o       o  /|    \n");
-		printf("    /             / |    \n");
-		printf("   /__o________o_/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
+	printf("      .-------------.    \n");
+	printf("     /  o       o  /|    \n");
+	printf("    /  o       o  / |    \n");
+	printf("   /__o_______o__/  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  |    \n");
+	printf("   |             |  /     \n");
+	printf("   |             | /     \n");
+	printf("   |             |/       \n");
+	printf("%i. '-------------'        \n",i);
+
+	return 6;
 }
 
-int dice5(char i)
-{
-        int a=5;
-        printf("      .-------------.    \n");
-		printf("     /  o       o  /|    \n");
-		printf("    /      o      / |    \n");
-		printf("   /__o_______o__/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
-}
+// End dice functions.
 
-int dice6(char i)
-{
-        int a=6;
-        printf("      .-------------.    \n");
-		printf("     /  o       o  /|    \n");
-		printf("    /  o       o  / |    \n");
-		printf("   /__o_______o__/  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  |    \n");
-		printf("   |             |  /     \n");
-		printf("   |             | /     \n");
-		printf("   |             |/       \n");
-		printf("%c. '-------------'        \n",i);
-        return a;
-}
-
+/*
+* Prints the welcom screen, nothing more or less
+* @param: void
+* @return: void
+*/
 void printIntro(void)
 {
-
-
 printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
 printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
 printf("| | _____  _____ | || |  _________   | || |   _____      | || |     ______   | || |     ____     | || | ____    ____ | || |  _________   | |  \n");
@@ -208,6 +210,5 @@ printf("| |              | || |              | || |              | || |         
 printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  \n");
 printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   \n");
 
-
-printf("<< Uitleg voeg je hier toe>>\n");
+printf("By:\nFelix & Leander\n");
 }
