@@ -22,10 +22,7 @@ void printIntro(void);
 */
 char rollRandomDie(void)
 {
-	//srand(time(NULL));
-	unsigned char die = (rand() % 6) + 1;
-
-	return rollDie(die);
+	return rollDie((rand() % 6) + 1);
 }
 
 /*
