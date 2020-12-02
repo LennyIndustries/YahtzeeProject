@@ -18,7 +18,7 @@ void printIntro(void);
 /*
 * Rolls a random die.
 * @param: void
-* @return: char (die) What die was rolled as numeric value.
+* @return: rollDie() (char) What die was rolled as numeric value.
 */
 char rollRandomDie(void)
 {
@@ -26,9 +26,9 @@ char rollRandomDie(void)
 }
 
 /*
-* Rolls a givven die.
-* @param: die (char) What die was rolled.
-* @return: char (n) What die was rolled as numeric value.
+* Rolls a given die.
+* @param: n (char) What die needs to be rolled.
+* @return: die (char) What die was rolled as numeric value.
 */
 char rollDie(char n)
 {
@@ -79,7 +79,7 @@ char dice1(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 1;
 }
@@ -95,7 +95,7 @@ char dice2(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 2;
 }
@@ -111,7 +111,7 @@ char dice3(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 3;
 }
@@ -127,7 +127,7 @@ char dice4(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 4;
 }
@@ -143,7 +143,7 @@ char dice5(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 5;
 }
@@ -159,7 +159,7 @@ char dice6(char i)
 	printf("   |             |  /     \n");
 	printf("   |             | /     \n");
 	printf("   |             |/       \n");
-	printf("%i. '-------------'        \n",i);
+	printf("%i. '-------------'        \n\n",i);
 
 	return 6;
 }
