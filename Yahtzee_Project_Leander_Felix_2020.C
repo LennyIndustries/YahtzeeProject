@@ -40,8 +40,8 @@ int main(void)
 	char scorePlayerOne[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 1 score array
 	char scorePlayerTwo[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 2 score array
 
-	char * playerOneDicePointer;
-	char * playerTwoDicePointer;
+	char * playerOneDicePointer; // Pointer to plqyer 1's dice array
+	char * playerTwoDicePointer; // Pointer to plqyer 2's dice array
 
 	//char playerOneDice[DICE_PER_GAME];
 	//char playerTwoDice[DICE_PER_GAME];
@@ -50,6 +50,7 @@ int main(void)
 	char diceArray[] = {0, 0, 0, 0, 0};
 	//char diceToKeep = 0;
 
+	// Variables used in the loops to enter what dice to keep
 	char confirm = 'x';
 	int i = 0;
 	int tmpDieStorage = 0;
@@ -61,99 +62,99 @@ int main(void)
 		printf("Player one's turn.\n");
 		playerOneDicePointer = rollAllDice(); // Rolls 5 dice for player 1
 
-		do // Main loop for selecting dice
+	do // Main loop for selecting dice
+	{
+		printf("Enter the number of the die you would like to keep.\nEnter 0 to stop.\n");
+
+		do // Loop for entering dice
 		{
-			printf("Enter the number of the die you would like to keep.\nEnter 0 to stop.\n");
-
-			do // Loop for entering dice
+			do // Loop for entering ONE die
 			{
-				do // Loop for entering ONE die
-				{
-					printf("You have %i entries left.\n", 5 - i);
-					scanf("%i", &tmpDieStorage); // Stores the enterd value to check it
+				printf("You have %i entries left.\n", 5 - i);
+				scanf("%i", &tmpDieStorage); // Stores the enterd value to check it
 
-					if (tmpDieStorage < 0 || tmpDieStorage > 5) // Checks if the value is out of bounds (0-5)
+				if (tmpDieStorage < 0 || tmpDieStorage > 5) // Checks if the value is out of bounds (0-5)
+				{
+					printf("Input out of bounds (0 - 5)\n");
+				}
+				else
+				{
+					if (checkArrayValue(diceArray, i) && tmpDieStorage > 0) // Checks if the position in the array is unused (0) if the user didn't enter 0 to stop
 					{
-						printf("Input out of bounds (0 - 5)\n");
-					}
-					else
-					{
-						if (checkArrayValue(diceArray, i) && tmpDieStorage > 0) // Checks if the position in the array is unused (0) if the user didn't enter 0 to stop
+						for (int k = i; k >= 0; k--) // Checks if the enter value is already in the array
 						{
-							for (int k = i; k >= 0; k--)
+							if (diceArray[k] == tmpDieStorage)
 							{
-								if (diceArray[k] == tmpDieStorage)
-								{
-									doubleEntryCheck = 1;
-								}
+								doubleEntryCheck = 1;
 							}
-							if (doubleEntryCheck)
-							{
-								printf("Dice already chosen\n");
-								doubleEntryCheck = 0;
-							}
-							else
-							{
-								diceArray[i] = tmpDieStorage;
-							}
+						}
+						if (doubleEntryCheck) // Value is already chosen
+						{
+							printf("Dice already chosen\n");
+							doubleEntryCheck = 0;
 						}
 						else
 						{
-							if (tmpDieStorage == 0) // If the user want's to stop entering values
-							{
-								printf("Stopping input.\n");
-							}
-							else // If the position in the array is usedd already
-							{
-								printf("The value %i is in this position.\n", diceArray[i]);
-							}
+							diceArray[i] = tmpDieStorage; // Puts the value in the array
+						}
+					}
+					else
+					{
+						if (tmpDieStorage == 0) // If the user want's to stop entering values
+						{
+							printf("Stopping input.\n");
+						}
+						else // If the position in the array is usedd already
+						{
+							printf("The value %i is in this position.\n", diceArray[i]);
 						}
 					}
 				}
-				while (diceArray[i] == 0 && tmpDieStorage != 0); // There is no value in the current position of the array and the user didn't want to stop
+			}
+			while (diceArray[i] == 0 && tmpDieStorage != 0); // There is no value in the current position of the array and the user didn't want to stop
 
+			i++;
+		}
+		while (tmpDieStorage != 0 && i < DICE_PER_GAME); // The uses want's to enter a value and is not over the limit
+
+		printf("Keeping folowing dice:\n");
+
+		if (diceArray[0])
+		{
+			i = 0;
+			do // Loop to print kept dice
+			{
+				printf("Die: %i - with value: %i\n", diceArray[i], * (playerOneDicePointer + (diceArray[i] - 1)));
 				i++;
 			}
-			while (tmpDieStorage != 0 && i < DICE_PER_GAME); // The uses want's to enter a value and is not over the limit
+			while (diceArray[i]); // Keeps going until the array is run trough or all value not 0 have been displayed
+		}
+		else
+		{
+			printf("None.\n");
+		}
 
-			printf("Keeping folowing dice:\n");
+		do // Loop for confirming input
+		{
+			printf("Is this correct (y/n)? \n");
+			scanf(" %c", &confirm);
 
-			if (diceArray[0])
+			if (confirm == 'n' || confirm == 'N')
 			{
 				i = 0;
-				do // Loop to print kept dice
+				for (int i = 0; i < DICE_PER_GAME; i++) // Clear the array to enter nez values
 				{
-					printf("Die: %i - with value: %i\n", diceArray[i], * (playerOneDicePointer + (diceArray[i] - 1)));
-					i++;
+					diceArray[i] = 0;
 				}
-				while (diceArray[i]); // Keeps going until the array is run trough or all value not 0 have been displayed
 			}
-			else
+			else if (confirm != 'y' && confirm != 'Y')
 			{
-				printf("None.\n");
+				printf("Invalid input!\n");
 			}
-
-			do // Loop for confirming input
-			{
-				printf("Is this correct (y/n)? \n");
-				scanf(" %c", &confirm);
-
-				if (confirm == 'n')
-				{
-					i = 0;
-					for (int i = 0; i < DICE_PER_GAME; i++) // Clear the array to enter nez values
-					{
-						diceArray[i] = 0;
-					}
-				}
-				else if (confirm != 'y')
-				{
-					printf("Invalid input!\n");
-				}
-			}
-			while (confirm != 'y' && confirm != 'n'); // If the user didn't enter y or n
+		}
+		while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N')); // If the user didn't enter y or n
 	}
-	while (confirm != 'y'); // While the user doesn't want to continue
+	while (confirm != 'y' && confirm != 'Y'); // While the user doesn't want to continue
 
 		//printf("%c\n", confirm);
 		//if relolling go to start
