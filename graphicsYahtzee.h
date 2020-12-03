@@ -2,11 +2,7 @@
 * This file contains all the graphics used in Yahtzee Project
 */
 
-#include <time.h>
-
 // Functions
-char rollRandomDie(void);
-char rollDie(char n);
 char dice1(char i);
 char dice2(char i);
 char dice3(char i);
@@ -14,53 +10,6 @@ char dice4(char i);
 char dice5(char i);
 char dice6(char i);
 void printIntro(void);
-
-/*
-* Rolls a random die.
-* @param: void
-* @return: rollDie() (char) What die was rolled as numeric value.
-*/
-char rollRandomDie(void)
-{
-	return rollDie((rand() % 6) + 1);
-}
-
-/*
-* Rolls a given die.
-* @param: n (char) What die needs to be rolled.
-* @return: die (char) What die was rolled as numeric value.
-*/
-char rollDie(char n)
-{
-	char die = 0;
-
-	switch (n)
-	{
-		case 1:
-			die = dice1(n);
-			break;
-		case 2:
-			die = dice2(n);
-			break;
-		case 3:
-			die = dice3(n);
-			break;
-		case 4:
-			die = dice4(n);
-			break;
-		case 5:
-			die = dice5(n);
-			break;
-		case 6:
-			die = dice6(n);
-			break;
-		default:
-			printf("An error occourt.\nFailed to roll a die (%i)", n);
-			break;
-	}
-
-	return die;
-}
 
 /*
 * All diceX have the same input and return.
