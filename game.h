@@ -1,22 +1,44 @@
 #define DICE_PER_GAME 5
 
-void rollDiceSet(char amountOfDice);
+char * rollDiceSet(char amountOfDice, char currentDice[]);
 char checkArrayValue(char scoreArray[], int pos);
 char * rollDice(char diceCount);
+
+void playGame(void)
+{
+	char dice[] = {1, 0, 0, 0, 0};
+	char * diceArrayPointer = 0;
+
+	diceArrayPointer = rollDiceSet(DICE_PER_GAME, dice);
+	for (int i = 0; i < DICE_PER_GAME; i++)
+	{
+		dice[i] = * (diceArrayPointer + i);
+		printf("dice[%i] = %i\n", i, dice[i]);
+	}
+}
 
 /*
 * tbd
 * @param: (char) Amount of dice in the roll
 * @return: tbd
 */
-void rollDiceSet(char amountOfDice)
+char * rollDiceSet(char amountOfDice, char currentDice[])
 {
 	int i = 0; // Counter used in loops
 	char confirm = 'x'; // y/n input from user
 	int tmpDieStorage = 0; // temporary storage for the dice number
 	char doubleEntryCheck = 0; // 1/0 set if q die is already in the list
-	char diceArray[] = {0, 0, 0, 0, 0}; // dice list
+	static char diceArray[] = {0, 0, 0, 0, 0}; // dice list
 	char * dicePointer = rollDice(amountOfDice); // Rolls x dice
+
+	for (int j = 0; j < DICE_PER_GAME; j++) // Skipping i forward if there is a value there
+	{
+		if (currentDice[i])
+		{
+			diceArray[i] = currentDice[i];
+			i++;
+		}
+	}
 
 	do // Main loop for selecting dice
 	{
@@ -110,6 +132,8 @@ void rollDiceSet(char amountOfDice)
 		while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N')); // If the user didn't enter y or n
 	}
 	while (confirm != 'y' && confirm != 'Y'); // While the user doesn't want to continue
+
+	return diceArray;
 }
 
 /*
