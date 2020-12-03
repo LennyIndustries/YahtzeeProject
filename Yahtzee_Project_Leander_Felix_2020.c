@@ -58,7 +58,8 @@ int main(void)
 	// int doubleEntryCheck = 0;
 
 	//printIntro(); // Annoying while trying to debug
-	playGame();
+	char test = playGame();
+	printf("Score: %i\n", test);
 
 	exit(EXIT_SUCCESS);
 

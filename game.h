@@ -3,7 +3,8 @@
 #define DICE_PER_GAME 5 // Total dice in the game
 #define MAX_REROLLS 2 // Maximum amount of times you can reroll dice. Fill in ONE LESS then the total amount of games!
 
-void playGame(void);
+char playGame(void);
+char score(char dice[]);
 void printDice(char dice[]);
 char * rollDiceSet(char amountOfDice, char forceKeep);
 char * selectDice(char diceArray[], char lenghtOfArray, char clear);
@@ -18,7 +19,7 @@ int getUserInput(void);
 * @param: tbd
 * @return: tbd
 */
-void playGame(void)
+char playGame(void)
 {
 	char dice[DICE_PER_GAME]; // Local dice array
 	char * diceArrayPointer = 0; // Return array pointer
@@ -119,6 +120,113 @@ void playGame(void)
 		rollCounter++; // One roll has finished
 	}
 	while(dieCounter < DICE_PER_GAME);
+
+	return score(dice);
+}
+
+/*
+* tbd
+* @param: tbd
+* @return: tbd
+*/
+char score(char dice[])
+{
+	char sumOne = 0; // Sum of all 1's
+	char totalOne = 0;
+	char sumTwo = 0; // Sum of all 2's
+	char totalTwo = 0;
+	char sumThree = 0; // Sum of all 3's
+	char totalThree = 0;
+	char sumFour = 0; // Sum of all 4's
+	char totalFour = 0;
+	char sumFive = 0; // Sum of all 5's
+	char totalFive = 0;
+	char sumSix = 0; // Sum of all 6's
+	char totalSix = 0;
+	char threeOfAKind = 0; // At least 3 of the same dice
+	char fourOfAKind = 0; // At least 4 of the same dice
+	char fullHouse = 0; // At least a set of 3 of the same dice and 2 of the same dice (can also be gotten by having yahtzee if it's already is filled in)
+	char smallStraight = 0; // 4 sequential dice
+	char largeStraight = 0; // 5 sequential dice
+	char chance = 0; // Sum of all dice
+	char yahtzee = 0; // 5 of the same (after first you get a bonus of 100 pt and can choose another score)
+	char sequentialCheckStorage = 0; // Storage used when looking for sequential dice
+	char sequentialFlag = 0;
+	char sequentialArray[DICE_PER_GAME];
+	char foundOne = 0;
+	char lowestDie = 6;
+
+	for (int i = 0; i < DICE_PER_GAME; i++) // Simple top scores & chance
+	{
+		printf("Score for die: %i - value: %i\n", i + 1, dice[i]); // DEBUG
+		switch (dice[i])
+		{
+			case 1:
+				printf("It's a ONE\n"); // DEBUG
+				totalOne++;
+				sumOne += 1;
+				break;
+			case 2:
+				printf("It's a TWO\n"); // DEBUG
+				totalTwo++;
+				sumTwo += 2;
+				break;
+			case 3:
+				printf("It's a THREE\n"); // DEBUG
+				totalThree++;
+				sumThree += 3;
+				break;
+			case 4:
+				printf("It's a FOUR\n"); // DEBUG
+				totalFour++;
+				sumFour += 4;
+				break;
+			case 5:
+				printf("It's a FIVE\n"); // DEBUG
+				totalFive++;
+				sumFive += 5;
+				break;
+			case 6:
+				printf("It's a SIX\n"); // DEBUG
+				totalSix++;
+				sumSix += 6;
+				break;
+			default:
+				printf("Could not calculate score!\n");
+				break;
+		}
+		chance += dice[i];
+	}
+
+	printf("Dice total: \n1: %i\n2: %i\n3: %i\n4: %i\n5: %i\n6: %i\n", totalOne, totalTwo, totalThree, totalFour, totalFive, totalSix); // DEBUG
+
+	if ((totalOne >= 3) || (totalTwo >= 3) || (totalThree >= 3) || (totalFour >= 3) || (totalFive >= 3) || (totalSix >= 3)) // 3 of a kind
+	{
+		printf("Three of a kind\n"); // DEBUG
+		threeOfAKind = 1;
+	}
+
+	if ((totalOne >= 4) || (totalTwo >= 4) || (totalThree >= 4) || (totalFour >= 4) || (totalFive >= 4) || (totalSix >= 4)) // 4 of a kind
+	{
+		printf("Four of a kind\n"); // DEBUG
+		fourOfAKind = 1;
+	}
+
+	if ((totalOne >= 5) || (totalTwo >= 5) || (totalThree >= 5) || (totalFour >= 5) || (totalFive >= 5) || (totalSix >= 5)) // Yahtzee
+	{
+		printf("Yahtzee\n"); // DEBUG
+		yahtzee = 1;
+	}
+
+	// Find the lagest sequense of dice
+
+	smallStraight = (sequentialFlag >= 4) ? 1 : 0;
+	largeStraight = (sequentialFlag >= 5) ? 1 : 0;
+
+	printf("Select you socre:\n1 - All 1's (%i pt)\n2 - All 2's (%i pt)\n3 - All 3's (%i pt)\n4 - All 4's (%i pt)\n5 - All 5's (%i pt)\n6 - All 6's (%i pt)\n", sumOne, sumTwo, sumThree, sumFour, sumFive, sumSix);
+	printf("A - 3 of a kind (%i pt)\nB - 4 of a kind (%i pt)\nC - Full house (%i pt)\nD - Small straight (%i pt)\nE - Large straight (%i pt)\nF - Chance (%i pt)\nG - Yahtzee (%i pt)\n", threeOfAKind * chance, fourOfAKind * chance, fullHouse * 25, smallStraight * 30, largeStraight * 40, chance, yahtzee * 50);
+
+	return 0;
 }
 
 /*
@@ -208,7 +316,7 @@ char * selectDice(char diceArray[], char lenghtOfArray, char clear)
 			{
 				printf("You have %i entries left.\n", lenghtOfArray - i);
 				//scanf("%i", &tmpDieStorage) // Stores the enterd value to check it
-				tmpDieStorage = getUserInput();
+				tmpDieStorage = getUserInput(); // A better way of getting user input
 				printf("Input: %i\n", tmpDieStorage); // DEBUG
 
 				if (tmpDieStorage < 0 || tmpDieStorage > lenghtOfArray) // Checks if the value is out of bounds (0-5)
@@ -356,8 +464,10 @@ char checkArrayValue(char array[], int pos)
 {
 	if (!array[pos])
 	{
+		printf("Position clear\n"); // DEBUG
 		return 1;
 	}
+	printf("Position in use\n"); // DEBUG
 	return 0;
 }
 
@@ -392,6 +502,7 @@ char * rollDice(char diceCount)
 */
 char rollRandomDie(void)
 {
+	printf("Rolling random die!\n"); // DEBUG
 	return rollDie((rand() % 6) + 1);
 }
 
@@ -447,6 +558,7 @@ int getUserInput(void)
 		int value;
 		if (sscanf(buffer, "%d", &value) == 1 && value >= 0)
 		{
+			printf("Input return value: %i\n", value); // DEBUG
 			return value;
 		}
 		fflush(stdout);
