@@ -9,9 +9,8 @@
 #define DICE_PER_GAME 5 // Total dice in the game
 
 // Functions
-char * playGame(char scoreArray[], char maxRerolls);
-void getWinner(char playerOneArray[], char playerTwoArray[]);
-char * score(char dice[], char scoreArray[]);
+int * playGame(int scoreArray[], char maxRerolls);
+int * score(char dice[], int scoreArray[]);
 void printDice(char dice[]);
 char * rollDiceSet(char amountOfDice, char forceKeep);
 char * selectDice(char diceArray[], char lenghtOfArray, char clear);
@@ -26,7 +25,7 @@ int getUserInput(void);
 * @param: (char) scoreArray[] the array with all the scores of the player; (char) maxRerolls The maximum amount of rerells per player
 * @return: (char *) score(dice, scoreArray)
 */
-char * playGame(char scoreArray[], char maxRerolls)
+int * playGame(int scoreArray[], char maxRerolls)
 {
 	char dice[DICE_PER_GAME]; // Local dice array
 	char * diceArrayPointer = 0; // Return array pointer
@@ -119,7 +118,7 @@ char * playGame(char scoreArray[], char maxRerolls)
 				//printf("Die counter: %i\n", dieCounter); // DEBUG
 			}
 
-			printf("Print two\n"); // DEBUG
+			//printf("Print two\n"); // DEBUG
 			printDice(dice); // Prints what dice the player currently has
 			confirm = 'x';
 		}
@@ -132,42 +131,11 @@ char * playGame(char scoreArray[], char maxRerolls)
 }
 
 /*
-* Compares to array and find the highes one.
-* @param: (char) playerOneArray[] The array of player one; (char) playerTwoArray[] The array for player two.
-* @return: VOID
-*/
-void getWinner(char playerOneArray[], char playerTwoArray[])
-{
-	int playerOneSum = 0;
-	int playerTwoSum = 0;
-
-	for (int i = 0; i < 14; i++) // Gets the sum of both arrays
-	{
-		playerOneSum += playerOneArray[i];
-		playerTwoSum += playerTwoArray[i];
-	}
-
-	if (playerOneSum > playerTwoSum) // Checks what array if higher.
-	{
-		printf("Player one wins!\nFinal score:\nPlayer one: %i\nPlayer two: %i\n", playerOneSum, playerTwoSum);
-	}
-	else if (playerTwoSum > playerOneSum)
-	{
-		printf("Player two wins!\nFinal score:\nPlayer one: %i\nPlayer two: %i\n", playerOneSum, playerTwoSum);
-	}
-	else
-	{
-		printf("It's a draw\nFinal score:\nPlayer one: %i\nPlayer two: %i\n", playerOneSum, playerTwoSum);
-	}
-	printf("GG WP!\n");
-}
-
-/*
 * This function calculates the score from a givven dice array.
 * @param: (char) dice[] The dice array; (char) scoreArray[] the score array for the player.
 * @return: (char *) The array for the player with the new scores.
 */
-char * score(char dice[], char scoreArray[])
+int * score(char dice[], int scoreArray[])
 {
 	char sumOne = 0; // Sum of all 1's
 	char totalOne = 0;
