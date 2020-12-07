@@ -20,46 +20,49 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "graphicsYahtzee.h"
-#include "game.h"
-//#include "yahtzee.h"
+
+#include "graphicsYahtzee.c"
+#include "game.c"
 
 // Declarations
-//#define AANTAL_DEMO_STENEN 5
-//#define DICE_PER_GAME 5
-//#define MAX_GAMES 5 // Maximum amound of rounds played per player.
-//#define MAX_REROLLS 2 // Maximum amount of times you can reroll dice.
-
-// Functions
-/*char checkArrayValue(char scoreArray[], int pos);
-char * rollDice(char diceCount);*/
+#define MAX_GAMES 5 // Maximum amound of rounds played per player.
+#define MAX_REROLLS 2 // Maximum amount of times you can reroll dice. Fill in ONE LESS then the total amount of rerolls!
 
 int main(void)
 {
-	srand(time(NULL)); // Sets the random seed
+	char scorePlayerOne[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 1 score array
+	char scorePlayerTwo[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 2 score array
 
-	//char scorePlayerOne[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 1 score array
-	//char scorePlayerTwo[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; // Player 2 score array
+	char * playerOneDicePointer; // Pointer to player 1's dice array
+	char * playerTwoDicePointer; // Pointer to player 2's dice array
 
-	//char * playerOneDicePointer; // Pointer to plqyer 1's dice array
-	//char * playerTwoDicePointer; // Pointer to plqyer 2's dice array
+	printIntro(MAX_GAMES, MAX_REROLLS); // Annoying while trying to debug
+	system("PAUSE");
+	for (int i = 0; i < MAX_GAMES; i++)
+	{
+		printf("Game: %i / %i\n", i + 1, MAX_GAMES);
+		printf("Player one's turn\n");
+		system("PAUSE");
+		playerOneDicePointer = playGame(scorePlayerOne, MAX_REROLLS);
+		for (int i = 0; i < 13; i++)
+		{
+			scorePlayerOne[i] = * (playerOneDicePointer + i);
+			printf("Score %i = %i\n", i, scorePlayerOne[i]);
+		}
+		printScore(scorePlayerOne);
 
-	//char playerOneDice[DICE_PER_GAME];
-	//char playerTwoDice[DICE_PER_GAME];
+		printf("Player two's turn\n");
+		system("PAUSE");
+		playerTwoDicePointer = playGame(scorePlayerTwo, MAX_REROLLS);
+		for (int i = 0; i < 13; i++)
+		{
+			scorePlayerTwo[i] = * (playerTwoDicePointer + i);
+			printf("Score %i = %i\n", i, scorePlayerTwo[i]);
+		}
+		printScore(scorePlayerTwo);
+	}
 
-	//char die1, die2, die3, die4, die5;
-	//char diceArray[] = {0, 0, 0, 0, 0};
-	//char diceToKeep = 0;
-
-	// Variables used in the loops to enter what dice to keep
-	// char confirm = 'x';
-	// int i = 0;
-	// int tmpDieStorage = 0;
-	// int doubleEntryCheck = 0;
-
-	//printIntro(); // Annoying while trying to debug
-	char test = playGame();
-	printf("Score: %i\n", test);
+	getWinner(scorePlayerOne, scorePlayerTwo);
 
 	exit(EXIT_SUCCESS);
 
