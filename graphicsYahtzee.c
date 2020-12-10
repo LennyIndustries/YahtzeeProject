@@ -1,15 +1,111 @@
 /*
-* This file contains all the graphics used in Yahtzee Project
+* This file contains all the graphics used in Yahtzee Project & the log function.
 */
 
-// Functions
-char dice1(char i);
-char dice2(char i);
-char dice3(char i);
-char dice4(char i);
-char dice5(char i);
-char dice6(char i);
-void printIntro(char maxGames, char maxRerolls);
+// Libraries
+#include "graphicsYahtzee.h"
+
+/*
+* Use this to log lines to the output log.
+* myLog(logLevel, message, append);
+* @param:
+* logLevel:
+*		- INFO : Just normal log info.
+*		- WARN : Warning that did not terminate the program but should not happen.
+*		- CRIT : Critical warning that terminates the program.
+* message: A log message you would like to put in the log.
+* append: Wether to append (1) or not (0). If you do not append it will clear to file.
+* @return:VOID
+* Output.log example line
+* logLevel :: Mmm dd yyy - hh:mm:ss File:FILE_LOCATION (line: LINE IN CODE) :: message
+*/
+void myLog(char * logLevel, char * message, char append)
+{
+	char dateTime[50];
+	time_t myTime = time(NULL);
+	FILE * myLog;
+
+	strftime(dateTime, 50, "%H:%M:%S - %d/%m/%Y", localtime(&myTime));
+
+	myLog = fopen("Output.log", append ? "a" : "w");
+	fprintf (myLog, "%s :: %s :: File:%s (line: %d) :: %s\n", logLevel, dateTime, __FILE__, __LINE__, message);
+	fclose(myLog);
+}
+
+/*
+* Prints the score screen
+* @param: (char) The scores to print
+* @return: VOID
+*/
+void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
+{
+	int scoreSumOne = 0;
+	int scoreSumTwo = 0;
+	int scoreSumThree = 0;
+	int scoreSumFour = 0;
+	int scoreSumFive = 0;
+	int scoreSumTotal = 0;
+
+	for (int i = 0; i < MAX_GAMES; i++)
+	{
+		printf("I = %i\n", i); // DEBUG
+		for (int j = 0; j < MAX_ROUNDS + 1; j++)
+		{
+			printf("J = %i\n", j); // DEBUG
+			if (score[i][j] > 0)
+			{
+				printf("Score over 0: %i\n", score[i][j]); // DEBUG
+				scoreSumTotal += score[i][j];
+
+				switch (i)
+				{
+					case 0:
+						scoreSumOne += score[i][j];
+						break;
+					case 1:
+						scoreSumTwo += score[i][j];
+						break;
+					case 2:
+						scoreSumThree += score[i][j];
+						break;
+					case 3:
+						scoreSumFour += score[i][j];
+						break;
+					case 4:
+						scoreSumFive += score[i][j];
+						break;
+					default:
+						printf("Failed to calculate score!\n");
+						exit(EXIT_FAILURE);
+						break;
+				}
+			}
+		}
+	}
+
+	printf("=================================================================\n");
+	printf("| Aces\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][0], score[1][0], score[2][0], score[3][0], score[4][0]);
+	printf("| Twos\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][1], score[1][1], score[2][1], score[3][1], score[4][1]);
+	printf("| Threes\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][2], score[1][2], score[2][2], score[3][2], score[4][2]);
+	printf("| Fours\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][3], score[1][3], score[2][3], score[3][3], score[4][3]);
+	printf("| Fives\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][4], score[1][4], score[2][4], score[3][4], score[4][4]);
+	printf("| Sixes\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][5], score[1][5], score[2][5], score[3][5], score[4][5]);
+	printf("=================================================================\n");
+	printf("| Three of a kind\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][6], score[1][6], score[2][6], score[3][6], score[4][6]);
+	printf("| Four of a kind\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][7], score[1][7], score[2][7], score[3][7], score[4][7]);
+	printf("| Full house\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][8], score[1][8], score[2][8], score[3][8], score[4][8]);
+	printf("| Small straight\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][9], score[1][9], score[2][9], score[3][9], score[4][9]);
+	printf("| Large straight\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][10], score[1][10], score[2][10], score[3][10], score[4][10]);
+	printf("| Chance\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][11], score[1][11], score[2][11], score[3][11], score[4][11]);
+	printf("| Yahtzee\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][12], score[1][12], score[2][12], score[3][12], score[4][12]);
+	printf("=================================================================\n");
+	printf("| Yahtzee bonus\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", score[0][13], score[1][13], score[2][13], score[3][13], score[4][13]);
+	printf("=================================================================\n");
+	printf("| Total\t\t\t| %i\t| %i\t| %i\t| %i\t| %i\t|\n", scoreSumOne, scoreSumTwo, scoreSumThree, scoreSumFour, scoreSumFive);
+	printf("=================================================================\n");
+	printf("| Grandtotal\t\t| %i\t\t\t\t\t|\n", scoreSumTotal);
+	printf("=================================================================\n");
+}
 
 /*
 * All diceX have the same input and return.
@@ -19,6 +115,7 @@ void printIntro(char maxGames, char maxRerolls);
 */
 char dice1(char i)
 {
+	myLog("INFO", "Printing die 1.", 1);
 	printf("      .-------------.    \n");
 	printf("     /             /|    \n");
 	printf("    /      o      / |    \n");
@@ -35,6 +132,7 @@ char dice1(char i)
 
 char dice2(char i)
 {
+	myLog("INFO", "Printing die 2.", 1);
 	printf("      .-------------.    \n");
 	printf("     /  o          /|    \n");
 	printf("    /             / |    \n");
@@ -51,6 +149,7 @@ char dice2(char i)
 
 char dice3(char i)
 {
+	myLog("INFO", "Printing die 3.", 1);
 	printf("      .-------------.    \n");
 	printf("     /  o          /|    \n");
 	printf("    /      o      / |    \n");
@@ -67,6 +166,7 @@ char dice3(char i)
 
 char dice4(char i)
 {
+	myLog("INFO", "Printing die 4.", 1);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /             / |    \n");
@@ -83,6 +183,7 @@ char dice4(char i)
 
 char dice5(char i)
 {
+	myLog("INFO", "Printing die 5.", 1);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /      o      / |    \n");
@@ -99,6 +200,7 @@ char dice5(char i)
 
 char dice6(char i)
 {
+	myLog("INFO", "Printing die 6.", 1);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /  o       o  / |    \n");
@@ -117,44 +219,45 @@ char dice6(char i)
 
 /*
 * Prints the welcom screen, nothing more or less
-* @param: (char) maxGames The maximum amound of games; (char) maxRerolls The maximum amount of rerells per player
+* @param: VOID
 * @return: VOID
 */
-void printIntro(char maxGames, char maxRerolls)
+void printIntro(void)
 {
-printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
-printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
-printf("| | _____  _____ | || |  _________   | || |   _____      | || |     ______   | || |     ____     | || | ____    ____ | || |  _________   | |  \n");
-printf("| ||_   _||_   _|| || | |_   ___  |  | || |  |_   _|     | || |   .' ___  |  | || |   .'    `.   | || ||_   \\  /   _|| || | |_   ___  |  | |  \n");
-printf("| |  | | /\\ | |  | || |   | |_  \\_|  | || |    | |       | || |  / .'   \\_|  | || |  /  .--.  \\  | || |  |   \\/   |  | || |   | |_  \\_|  | |  \n");
-printf("| |  | |/  \\| |  | || |   |  _|  _   | || |    | |   _   | || |  | |         | || |  | |    | |  | || |  | |\\  /| |  | || |   |  _|  _   | |  \n");
-printf("| |  |   /\\   |  | || |  _| |___/ |  | || |   _| |__/ |  | || |  \\ `.___.'\\  | || |  \\  `--'  /  | || | _| |_\\/_| |_ | || |  _| |___/ |  | |  \n");
-printf("| |  |__/  \\__|  | || | |_________|  | || |  |________|  | || |   `._____.'  | || |   `.____.'   | || ||_____||_____|| || | |_________|  | |  \n");
-printf("| |              | || |              | || |              | || |              | || |              | || |              | || |              | |  \n");
-printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  \n");
-printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   \n");
-printf(" .----------------.  .----------------.                                                                                                       \n");
-printf("| .--------------. || .--------------. |                                                                                                      \n");
-printf("| |  _________   | || |     ____     | |                                                                                                      \n");
-printf("| | |  _   _  |  | || |   .'    `.   | |                                                                                                      \n");
-printf("| | |_/ | | \\_|  | || |  /  .--.  \\  | |                                                                                                      \n");
-printf("| |     | |      | || |  | |    | |  | |                                                                                                      \n");
-printf("| |    _| |_     | || |  \\  `--'  /  | |                                                                                                      \n");
-printf("| |   |_____|    | || |   `.____.'   | |                                                                                                      \n");
-printf("| |              | || |              | |                                                                                                      \n");
-printf("| '--------------' || '--------------' |                                                                                                      \n");
-printf(" '----------------'  '----------------'                                                                                                       \n");
-printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
-printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
-printf("| |  ____  ____  | || |      __      | || |  ____  ____  | || |  _________   | || |   ________   | || |  _________   | || |  _________   | |  \n");
-printf("| | |_  _||_  _| | || |     /  \\     | || | |_   ||   _| | || | |  _   _  |  | || |  |  __   _|  | || | |_   ___  |  | || | |_   ___  |  | |  \n");
-printf("| |   \\ \\  / /   | || |    / /\\ \\    | || |   | |__| |   | || | |_/ | | \\_|  | || |  |_/  / /    | || |   | |_  \\_|  | || |   | |_  \\_|  | |  \n");
-printf("| |    \\ \\/ /    | || |   / ____ \\   | || |   |  __  |   | || |     | |      | || |     .'.' _   | || |   |  _|  _   | || |   |  _|  _   | |  \n");
-printf("| |    _|  |_    | || | _/ /    \\ \\_ | || |  _| |  | |_  | || |    _| |_     | || |   _/ /__/ |  | || |  _| |___/ |  | || |  _| |___/ |  | |  \n");
-printf("| |   |______|   | || ||____|  |____|| || | |____||____| | || |   |_____|    | || |  |________|  | || | |_________|  | || | |_________|  | |  \n");
-printf("| |              | || |              | || |              | || |              | || |              | || |              | || |              | |  \n");
-printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  \n");
-printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   \n");
+	myLog("INFO", "Printing intro.", 1);
+	printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
+	printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
+	printf("| | _____  _____ | || |  _________   | || |   _____      | || |     ______   | || |     ____     | || | ____    ____ | || |  _________   | |  \n");
+	printf("| ||_   _||_   _|| || | |_   ___  |  | || |  |_   _|     | || |   .' ___  |  | || |   .'    `.   | || ||_   \\  /   _|| || | |_   ___  |  | |  \n");
+	printf("| |  | | /\\ | |  | || |   | |_  \\_|  | || |    | |       | || |  / .'   \\_|  | || |  /  .--.  \\  | || |  |   \\/   |  | || |   | |_  \\_|  | |  \n");
+	printf("| |  | |/  \\| |  | || |   |  _|  _   | || |    | |   _   | || |  | |         | || |  | |    | |  | || |  | |\\  /| |  | || |   |  _|  _   | |  \n");
+	printf("| |  |   /\\   |  | || |  _| |___/ |  | || |   _| |__/ |  | || |  \\ `.___.'\\  | || |  \\  `--'  /  | || | _| |_\\/_| |_ | || |  _| |___/ |  | |  \n");
+	printf("| |  |__/  \\__|  | || | |_________|  | || |  |________|  | || |   `._____.'  | || |   `.____.'   | || ||_____||_____|| || | |_________|  | |  \n");
+	printf("| |              | || |              | || |              | || |              | || |              | || |              | || |              | |  \n");
+	printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  \n");
+	printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   \n");
+	printf(" .----------------.  .----------------.                                                                                                       \n");
+	printf("| .--------------. || .--------------. |                                                                                                      \n");
+	printf("| |  _________   | || |     ____     | |                                                                                                      \n");
+	printf("| | |  _   _  |  | || |   .'    `.   | |                                                                                                      \n");
+	printf("| | |_/ | | \\_|  | || |  /  .--.  \\  | |                                                                                                      \n");
+	printf("| |     | |      | || |  | |    | |  | |                                                                                                      \n");
+	printf("| |    _| |_     | || |  \\  `--'  /  | |                                                                                                      \n");
+	printf("| |   |_____|    | || |   `.____.'   | |                                                                                                      \n");
+	printf("| |              | || |              | |                                                                                                      \n");
+	printf("| '--------------' || '--------------' |                                                                                                      \n");
+	printf(" '----------------'  '----------------'                                                                                                       \n");
+	printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
+	printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
+	printf("| |  ____  ____  | || |      __      | || |  ____  ____  | || |  _________   | || |   ________   | || |  _________   | || |  _________   | |  \n");
+	printf("| | |_  _||_  _| | || |     /  \\     | || | |_   ||   _| | || | |  _   _  |  | || |  |  __   _|  | || | |_   ___  |  | || | |_   ___  |  | |  \n");
+	printf("| |   \\ \\  / /   | || |    / /\\ \\    | || |   | |__| |   | || | |_/ | | \\_|  | || |  |_/  / /    | || |   | |_  \\_|  | || |   | |_  \\_|  | |  \n");
+	printf("| |    \\ \\/ /    | || |   / ____ \\   | || |   |  __  |   | || |     | |      | || |     .'.' _   | || |   |  _|  _   | || |   |  _|  _   | |  \n");
+	printf("| |    _|  |_    | || | _/ /    \\ \\_ | || |  _| |  | |_  | || |    _| |_     | || |   _/ /__/ |  | || |  _| |___/ |  | || |  _| |___/ |  | |  \n");
+	printf("| |   |______|   | || ||____|  |____|| || | |____||____| | || |   |_____|    | || |  |________|  | || | |_________|  | || | |_________|  | |  \n");
+	printf("| |              | || |              | || |              | || |              | || |              | || |              | || |              | |  \n");
+	printf("| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  \n");
+	printf(" '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   \n");
 
-printf("By:\nFelix & Leander\nBoth player get %i turns and can reroll dice %i times. Player one goes first followed by player two.\nIf you are choosing dice keep in mind that all returned dice can NOT be taken back!\nThe game will ask for confirmation on multiple points.\nAfter one round both players can see their score sheet.\nAfter %i games are played the game will print the winner and end.\n", maxGames, maxRerolls, maxGames);
+	printf("By:\nFelix & Leander\nBoth player get %i turns and can reroll dice %i times. Player one goes first followed by player two.\nIf you are choosing dice keep in mind that all returned dice can NOT be taken back!\nThe game will ask for confirmation on multiple points.\nA game has %i dice\nAfter one round both players can see their score sheet.\nAfter %i rounds are played the game will print the winner and end.\n", MAX_ROUNDS, MAX_REROLLS, DICE_PER_GAME, MAX_GAMES);
 }
