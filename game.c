@@ -7,10 +7,10 @@
 
 /*
 * Main function to play a game
-* @param: (char) scoreArray[] the array with all the scores of the player; (char) maxRerolls The maximum amount of rerells per player
+* @param: (char) scoreArray[] the array with all the scores of the player.
 * @return: (char *) score(dice, scoreArray)
 */
-int * playGame(int scoreArray[], char maxRerolls)
+int * playGame(int * scoreArray)
 {
 	char dice[DICE_PER_GAME]; // Local dice array
 	char * diceArrayPointer = 0; // Return array pointer
@@ -26,9 +26,9 @@ int * playGame(int scoreArray[], char maxRerolls)
 
 	do // Main game loop
 	{
-		printf("Roll: %i / %i\n", rollCounter + 1, maxRerolls + 1); // Prints the round
+		printf("Roll: %i / %i\n", rollCounter + 1, MAX_REROLLS + 1); // Prints the round
 		printf("Roll counter: %i\n", rollCounter); // DEBUG
-		if (rollCounter == maxRerolls)
+		if (rollCounter == MAX_REROLLS)
 		{
 			printf("FORCE KEEP ROLL\n"); // DEBUG
 			diceArrayPointer = rollDiceSet((DICE_PER_GAME - dieCounter), 1); // Rolls dice
@@ -58,7 +58,7 @@ int * playGame(int scoreArray[], char maxRerolls)
 
 		do // Loop for confirming input if the user want to keep these dice
 		{
-			if (rollCounter == maxRerolls || dieCounter == 0)
+			if (rollCounter == MAX_REROLLS || dieCounter == 0)
 			{
 				break;
 			}
@@ -162,7 +162,7 @@ void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray
 * @param: (char) dice[] The dice array; (char) scoreArray[] the score array for the player.
 * @return: (char *) The array for the player with the new scores.
 */
-int * score(char dice[], int scoreArray[])
+int * score(char * dice, int * scoreArray)
 {
 	char sumOne = 0; // Sum of all 1's
 	char totalOne = 0;
@@ -184,7 +184,7 @@ int * score(char dice[], int scoreArray[])
 	char chance = 0; // Sum of all dice
 	char yahtzee = 0; // 5 of the same (after first you get a bonus of 100 pt and can choose another score)
 	char sequentialCheckStorage = 0; // Storage used when looking for sequential dice
-	char sequentialFlag = 0;
+	//char sequentialFlag = 0;
 	char sequentialStorage = 0;
 	char sequentialCounter = 0;
 	char userScoreInput = 0;
@@ -258,41 +258,33 @@ int * score(char dice[], int scoreArray[])
 
 	for (int i = 0; i < DICE_PER_GAME; i++) // Checks if there is a sequence.
 	{
-		sequentialCounter = 0;
 		sequentialCheckStorage = dice[i];
+		printf("Checking die: %i\n", sequentialCheckStorage); // DEBUG
 		for (int j = 0; j < DICE_PER_GAME; j++)
 		{
-			printf("Checking die: %i\n", sequentialCheckStorage); // DEBUG
-			for (int k = 0; k < DICE_PER_GAME; k++)
+			if (sequentialCheckStorage == 6)
 			{
-				if (sequentialCheckStorage == 6)
-				{
-					break;
-				}
-				printf("Against: %i\n", dice[k]); // DEBUG
-				if (sequentialCheckStorage + 1 == dice[k])
-				{
-					sequentialFlag = 1;
-					sequentialCheckStorage = dice[k];
-					break;
-				}
+				printf("Max die value, skipping.\n"); // DEBUG
+				break;
 			}
-			printf("Sequential flag: %i\n", sequentialFlag); // DEBUG
-			if (sequentialFlag)
+			printf("Against: %i\n", dice[j]); // DEBUG
+			if (sequentialCheckStorage + 1 == dice[j])
 			{
+				printf("Sequence found.\n"); // DEBUG
 				sequentialCounter++;
+				sequentialCheckStorage++;
+				j = -1; // -1 Because it will add 1 once the loop start again so it will be 0.
+				printf("Sequential counter: %i\nChecking die: %i\n", sequentialCounter, sequentialCheckStorage); // DEBUG
 			}
-			else
-			{
-				sequentialCheckStorage = dice[j + 1];
-			}
-			if (sequentialStorage < sequentialCounter)
-			{
-				sequentialStorage = sequentialCounter;
-			}
-			printf("Sequential storage: %i\n", sequentialStorage); // DEBUG
-			sequentialCounter = 0;
 		}
+
+		if (sequentialCounter > sequentialStorage)
+		{
+			sequentialStorage = sequentialCounter;
+		}
+		printf("Sequential storage: %i\n", sequentialStorage); // DEBUG
+
+		sequentialCounter = 0;
 	}
 	printf("Largest sequence: %i\n", sequentialStorage); // DEBUG
 
@@ -452,7 +444,7 @@ int * score(char dice[], int scoreArray[])
 * @param: (char) dice[] the dice array
 * @return: VOID
 */
-void printDice(char dice[])
+void printDice(char * dice)
 {
 	printf("You have the following dice:\n");
 	for (int i = 0; i < DICE_PER_GAME; i++)
@@ -499,7 +491,7 @@ char * rollDiceSet(char amountOfDice, char forceKeep)
 * @param: (char) diceArray The array of dice; (char) lenghtOfArray The lenght of the givven array; (char) clear Wether or not to clear the chosen values (0 keep, 1 clear)
 * @return: (char *) The dice array with all the dice that are left.
 */
-char * selectDice(char diceArray[], char lenghtOfArray, char clear)
+char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 {
 	int i = 0; // Counter used in loops
 	char confirm = 'x'; // y/n input from user
@@ -533,7 +525,6 @@ char * selectDice(char diceArray[], char lenghtOfArray, char clear)
 			do // Loop for entering ONE die
 			{
 				printf("You have %i entries left.\n", lenghtOfArray - i);
-				//scanf("%i", &tmpDieStorage) // Stores the enterd value to check it
 				tmpDieStorage = getUserInput(); // A better way of getting user input
 				printf("Input: %i\n", tmpDieStorage); // DEBUG
 
@@ -574,11 +565,6 @@ char * selectDice(char diceArray[], char lenghtOfArray, char clear)
 						}
 					}
 				}
-				// else if ((next = getchar()) != EOF && next != '\n')
-				// {
-				// 	printf("Invalid input!\n");
-				// 	tmpDieStorage = -1;
-				// }
 			}
 			while (selectDiceArray[i] == 0 && tmpDieStorage != 0); // There is no value in the current position of the array and the user didn't want to stop
 			i++;
@@ -678,7 +664,7 @@ char * selectDice(char diceArray[], char lenghtOfArray, char clear)
 * @param: (char) scoreArray[] The array you want checked, (char) pos The position you would like to check.
 * @return: (char) 1 (success) or 0 (failed).
 */
-char checkArrayValue(char array[], int pos)
+char checkArrayValue(char * array, int pos)
 {
 	if (!array[pos])
 	{
