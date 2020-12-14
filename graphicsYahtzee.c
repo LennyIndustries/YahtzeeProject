@@ -1,43 +1,16 @@
 /*
-* This file contains all the graphics used in Yahtzee Project & the log function.
+* This file contains all the graphics used in Yahtzee Project.
 */
 
 // Libraries
 #include "graphicsYahtzee.h"
 
 /*
-* Use this to log lines to the output log.
-* myLog(logLevel, message, append);
-* @param:
-* logLevel:
-*		- INFO : Just normal log info.
-*		- WARN : Warning that did not terminate the program but should not happen.
-*		- CRIT : Critical warning that terminates the program.
-* message: A log message you would like to put in the log.
-* append: Wether to append (1) or not (0). If you do not append it will clear to file.
-* @return:VOID
-* Output.log example line
-* logLevel :: Mmm dd yyy - hh:mm:ss File:FILE_LOCATION (line: LINE IN CODE) :: message
-*/
-void myLog(char * logLevel, char * message, char append)
-{
-	char dateTime[50];
-	time_t myTime = time(NULL);
-	FILE * myLog;
-
-	strftime(dateTime, 50, "%H:%M:%S - %d/%m/%Y", localtime(&myTime));
-
-	myLog = fopen("Output.log", append ? "a" : "w");
-	fprintf (myLog, "%s :: %s :: File:%s (line: %d) :: %s\n", logLevel, dateTime, __FILE__, __LINE__, message);
-	fclose(myLog);
-}
-
-/*
 * Prints the score screen
-* @param: (char) The scores to print
+* @param: (char) score The scores to print; (char *) playerName The name of the player.
 * @return: VOID
 */
-void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
+void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1], char * playerName)
 {
 	int scoreSumOne = 0;
 	int scoreSumTwo = 0;
@@ -45,6 +18,8 @@ void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
 	int scoreSumFour = 0;
 	int scoreSumFive = 0;
 	int scoreSumTotal = 0;
+
+	printf("%s's score\n", playerName);
 
 	for (int i = 0; i < MAX_GAMES; i++)
 	{
@@ -76,6 +51,7 @@ void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
 						break;
 					default:
 						printf("Failed to calculate score!\n");
+						myLog(3, __FILE__, __LINE__, 1, "Could not find score: overflow.");
 						exit(EXIT_FAILURE);
 						break;
 				}
@@ -105,6 +81,8 @@ void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
 	printf("=================================================================\n");
 	printf("| Grandtotal\t\t| %i\t\t\t\t\t|\n", scoreSumTotal);
 	printf("=================================================================\n");
+
+	myLog(1, __FILE__, __LINE__, 1, "Total score for %s: %i.", playerName, scoreSumTotal);
 }
 
 /*
@@ -115,7 +93,7 @@ void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1])
 */
 char dice1(char i)
 {
-	myLog("INFO", "Printing die 1.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /             /|    \n");
 	printf("    /      o      / |    \n");
@@ -132,7 +110,7 @@ char dice1(char i)
 
 char dice2(char i)
 {
-	myLog("INFO", "Printing die 2.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /  o          /|    \n");
 	printf("    /             / |    \n");
@@ -149,7 +127,7 @@ char dice2(char i)
 
 char dice3(char i)
 {
-	myLog("INFO", "Printing die 3.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /  o          /|    \n");
 	printf("    /      o      / |    \n");
@@ -166,7 +144,7 @@ char dice3(char i)
 
 char dice4(char i)
 {
-	myLog("INFO", "Printing die 4.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /             / |    \n");
@@ -183,7 +161,7 @@ char dice4(char i)
 
 char dice5(char i)
 {
-	myLog("INFO", "Printing die 5.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /      o      / |    \n");
@@ -200,7 +178,7 @@ char dice5(char i)
 
 char dice6(char i)
 {
-	myLog("INFO", "Printing die 6.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing die %i.", i);
 	printf("      .-------------.    \n");
 	printf("     /  o       o  /|    \n");
 	printf("    /  o       o  / |    \n");
@@ -224,7 +202,7 @@ char dice6(char i)
 */
 void printIntro(void)
 {
-	myLog("INFO", "Printing intro.", 1);
+	myLog(1, __FILE__, __LINE__, 1, "Printing intro.");
 	printf(" .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   \n");
 	printf("| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  \n");
 	printf("| | _____  _____ | || |  _________   | || |   _____      | || |     ______   | || |     ____     | || | ____    ____ | || |  _________   | |  \n");

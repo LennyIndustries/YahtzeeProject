@@ -13,12 +13,13 @@
 int * playGame(int * scoreArray)
 {
 	char dice[DICE_PER_GAME]; // Local dice array
-	char * diceArrayPointer = 0; // Return array pointer
+	//char * diceArrayPointer = 0; // Return array pointer
 	char confirm = 'x'; // y/n input from user
 	char dieCounter = 0;
 	char rollCounter = 0; // Counts the amount of rolls made
 	char copyCounter = 0; // Saves the position during copying
 
+	myLog(1, __FILE__, __LINE__, 1, "Clearing dice with length: %i.", DICE_PER_GAME);
 	for (int i = 0; i < DICE_PER_GAME; i++) // Clearing dice array
 	{
 		dice[i] = 0;
@@ -27,60 +28,58 @@ int * playGame(int * scoreArray)
 	do // Main game loop
 	{
 		printf("Roll: %i / %i\n", rollCounter + 1, MAX_REROLLS + 1); // Prints the round
-		printf("Roll counter: %i\n", rollCounter); // DEBUG
+		myLog(1, __FILE__, __LINE__, 1, "Roll %i / %i", rollCounter + 1, MAX_REROLLS + 1);
 		if (rollCounter == MAX_REROLLS)
 		{
-			printf("FORCE KEEP ROLL\n"); // DEBUG
-			diceArrayPointer = rollDiceSet((DICE_PER_GAME - dieCounter), 1); // Rolls dice
+			myLog(1, __FILE__, __LINE__, 1, "Forcing player to keep roll.");
+			myLog(1, __FILE__, __LINE__, 1, "Getting dice.");
+			rollDiceSet((DICE_PER_GAME - dieCounter), 1, dice, DICE_PER_GAME); // Rolls dice
+			myLog(1, __FILE__, __LINE__, 1, "Dice gotten (FORCED).");
 		}
 		else
 		{
-			diceArrayPointer = rollDiceSet((DICE_PER_GAME - dieCounter), 0); // Rolls dice
+			myLog(1, __FILE__, __LINE__, 1, "Getting dice.");
+			rollDiceSet((DICE_PER_GAME - dieCounter), 0, dice, DICE_PER_GAME); // Rolls dice
+			myLog(1, __FILE__, __LINE__, 1, "Dice gotten.");
 		}
 
-		copyCounter = 0; // Resets the copy counter
-		for (int i = 0; i < DICE_PER_GAME; i++) // copying diceArrayPointer to dice
-		{
-			if (!dice[i])
-			{
-				dice[i] = * (diceArrayPointer + copyCounter);
-				copyCounter++;
-			}
-		}
 		dieCounter = 0;
+		myLog(1, __FILE__, __LINE__, 1, "Counting dice.");
 		for (int i = 0; i < DICE_PER_GAME; i++) // Counting dice
 		{
 			dieCounter += dice[i] ? 1 : 0;
 		}
+		myLog(1, __FILE__, __LINE__, 1, "Amount of dice: %i.", dieCounter);
 
-		printf("Print one\n"); // DEBUG
 		printDice(dice); // Prints what dice the player currently has
 
-		do // Loop for confirming input if the user want to keep these dice
-		{
-			if (rollCounter == MAX_REROLLS || dieCounter == 0)
-			{
-				break;
-			}
-			printf("Would you like to return dice for rerolling (y/n)?\n");
-			scanf(" %c", &confirm);
-
-			if (confirm == 'y' || confirm == 'Y') // Rerolling dice
-			{
-				diceArrayPointer = selectDice(dice, dieCounter, 1);
-				printf("Resetting array\n"); // DEBUG
-				for (int i = 0; i < DICE_PER_GAME; i++) // Resetting dice array
-				{
-					dice[i] = 0;
-				}
-				//printDice(dice); // Prints what dice the player currently has
-			}
-			else if (confirm != 'n' && confirm != 'N')
-			{
-				printf("Invalid input!\n");
-			}
-		}
-		while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N')); // If the user didn't enter y or n
+		// do // Loop for confirming input if the user want to keep these dice
+		// {
+		// 	if (rollCounter == MAX_REROLLS || dieCounter == 0)
+		// 	{
+		// 		break;
+		// 	}
+		// 	printf("Would you like to return dice for rerolling (y/n)?\n");
+		// 	scanf(" %c", &confirm);
+		//
+		// 	if (confirm == 'y' || confirm == 'Y') // Rerolling dice
+		// 	{
+		// 		myLog(1, __FILE__, __LINE__, 1, "Player is returning dice.");
+		// 		//diceArrayPointer = selectDice(dice, dieCounter, 1);
+		// 		selectDice(dice, dieCounter, 1, dice, DICE_PER_GAME);
+		// 		printf("Resetting array\n"); // DEBUG
+		// 		for (int i = 0; i < DICE_PER_GAME; i++) // Resetting dice array
+		// 		{
+		// 			dice[i] = 0;
+		// 		}
+		// 		//printDice(dice); // Prints what dice the player currently has
+		// 	}
+		// 	else if (confirm != 'n' && confirm != 'N')
+		// 	{
+		// 		printf("Invalid input!\n");
+		// 	}
+		// }
+		// while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N')); // If the user didn't enter y or n
 
 		copyCounter = 0; // Resets the copy counter
 		printf("Die counter: %i\nCopy counter: %i\n", dieCounter, copyCounter); // DEBUG
@@ -89,11 +88,11 @@ int * playGame(int * scoreArray)
 		{
 			for (int i = 0; i < DICE_PER_GAME; i++) // copying diceArrayPointer to dice
 			{
-				if (!dice[i])
-				{
-					dice[i] = * (diceArrayPointer + copyCounter);
-					copyCounter++;
-				}
+				// if (!dice[i])
+				// {
+				// 	dice[i] = * (diceArrayPointer + copyCounter);
+				// 	copyCounter++;
+				// }
 			}
 			dieCounter = 0;
 			for (int i = 0; i < DICE_PER_GAME; i++) // Counting dice
@@ -120,7 +119,7 @@ int * playGame(int * scoreArray)
 * @param: (char) playerOneArray[] The array of player one; (char) playerTwoArray[] The array for player two.
 * @return: VOID
 */
-void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray[MAX_GAMES][MAX_ROUNDS + 1])
+void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray[MAX_GAMES][MAX_ROUNDS + 1]) // Needs player names as input and logging
 {
 	int playerOneSum = 0;
 	int playerTwoSum = 0;
@@ -162,7 +161,7 @@ void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray
 * @param: (char) dice[] The dice array; (char) scoreArray[] the score array for the player.
 * @return: (char *) The array for the player with the new scores.
 */
-int * score(char * dice, int * scoreArray)
+int * score(char * dice, int * scoreArray) // Needs to get the log function
 {
 	char sumOne = 0; // Sum of all 1's
 	char totalOne = 0;
@@ -184,7 +183,6 @@ int * score(char * dice, int * scoreArray)
 	char chance = 0; // Sum of all dice
 	char yahtzee = 0; // 5 of the same (after first you get a bonus of 100 pt and can choose another score)
 	char sequentialCheckStorage = 0; // Storage used when looking for sequential dice
-	//char sequentialFlag = 0;
 	char sequentialStorage = 0;
 	char sequentialCounter = 0;
 	char userScoreInput = 0;
@@ -446,6 +444,7 @@ int * score(char * dice, int * scoreArray)
 */
 void printDice(char * dice)
 {
+	myLog(1, __FILE__, __LINE__, 1, "Printing dice to output.");
 	printf("You have the following dice:\n");
 	for (int i = 0; i < DICE_PER_GAME; i++)
 	{
@@ -455,86 +454,78 @@ void printDice(char * dice)
 
 /*
 * Rolls a set of dice.
-* @param: (char) Amount of dice in the roll; (char) forceKeep Wether or not the player can choose what dice to keep (0, player choise; 1 Force the player to keep all of them).
+* @param: (char) amountOfDice Amount of dice in the roll; (char) forceKeep Wether or not the player can choose what dice to keep (0, player choise; 1 Force the player to keep all of them); (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
 * @return: (char *) the dice array with all dice.
 */
-char * rollDiceSet(char amountOfDice, char forceKeep)
+char * rollDiceSet(char amountOfDice, char forceKeep, char * returnArray, char returnArrayLength)
 {
-	static char diceArray[DICE_PER_GAME]; // Dice list
-	char * dicePointer = rollDice(amountOfDice); // Rolls x dice
+	char tempDiceArray[amountOfDice]; // Dice list
 
-	for (int i = 0; i < DICE_PER_GAME; i++) // Clearing array to prevent random values
-	{
-		diceArray[i] = 0;
-	}
+	// myLog(1, __FILE__, __LINE__, 1, "Clearing returnArray with length: %i.", returnArrayLength);
+	// for (int i = 0; i < returnArrayLength; i++) // Clearing array to prevent random values
+	// {
+	// 	returnArray[i] = 0;
+	// }
 
-	for (int i = 0; i < amountOfDice; i++) // copying dicePointer array to diceArray
-	{
-		diceArray[i] = * (dicePointer + i);
-	}
+	rollDice(amountOfDice, tempDiceArray, returnArrayLength); // Rolls x dice
 
 	if (!forceKeep)
 	{
-		dicePointer = selectDice(diceArray, amountOfDice, 0);
+		myLog(1, __FILE__, __LINE__, 1, "Player may choose dice.");
+		selectDice(tempDiceArray, amountOfDice, 0, returnArray, amountOfDice);
 	}
 
-	for (int i = 0; i < amountOfDice; i++) // copying dicePointer array to diceArray
-	{
-		diceArray[i] = * (dicePointer + i);
-	}
-
-	return diceArray;
+	return returnArray;
 }
 
 /*
 * Lets the player select what dice to keep or remove from a givven array.
-* @param: (char) diceArray The array of dice; (char) lenghtOfArray The lenght of the givven array; (char) clear Wether or not to clear the chosen values (0 keep, 1 clear)
+* @param: (char) diceArray The array of dice; (char) lengthOfDiceArray The length of the givven array; (char) clear Wether or not to clear the chosen values (0 keep, 1 clear); (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
 * @return: (char *) The dice array with all the dice that are left.
 */
-char * selectDice(char * diceArray, char lenghtOfArray, char clear)
+char * selectDice(char * diceArray, char diceArrayLength, char clear, char * returnArray, char returnArrayLength)
 {
 	int i = 0; // Counter used in loops
 	char confirm = 'x'; // y/n input from user
 	int tmpDieStorage = 0; // temporary storage for the dice number
 	char doubleEntryCheck = 0; // 1/0 set if q die is already in the list
-	char selectDiceArray[lenghtOfArray]; // Selected dice list
+	char selectDiceArray[diceArrayLength]; // Selected dice list
 	char keepDie; // Used to determen wath value should be cleared from the return array
-	static char returnArray[DICE_PER_GAME]; // The array that will be returned
 	int arrayPosCounter = 0; // Counter used when creating the output array
 	char printCounter = 0; // A counter used during the printing of the array
 
-	for (int i = 0; i < lenghtOfArray; i++) // Clearing array to prevent random values
+	myLog(1, __FILE__, __LINE__, 1, "Selecting dice with clear = %i.", clear);
+	myLog(1, __FILE__, __LINE__, 1, "Clearing selectDiceArray with length: %i.", diceArrayLength);
+	for (int i = 0; i < diceArrayLength; i++) // Clearing array to prevent random values
 	{
 		selectDiceArray[i] = 0;
-		returnArray[i] = 0;
 	}
+
+	// myLog(1, __FILE__, __LINE__, 1, "Clearing returnArray with length: %i.", returnArrayLength);
+	// for (int i = 0; i < returnArrayLength; i++) // Clearing array to prevent random values
+	// {
+	// 	returnArray[i] = 0;
+	// }
 
 	do // Main loop for selecting dice
 	{
-		if (clear)
-		{
-			printf("Enter the number of the die you would like to return.\nEnter 0 to stop.\n");
-		}
-		else
-		{
-			printf("Enter the number of the die you would like to keep.\nEnter 0 to stop.\n");
-		}
-
+		printf(clear ? "Enter the number of the die you would like to return.\nEnter 0 to stop.\n" : "Enter the number of the die you would like to keep.\nEnter 0 to stop.\n");
 		do // Loop for entering dice
 		{
 			do // Loop for entering ONE die
 			{
-				printf("You have %i entries left.\n", lenghtOfArray - i);
+				printf((i == diceArrayLength - 1) ? "You have %i enrty left.\n" : "You have %i entries left.\n", diceArrayLength - i);
 				tmpDieStorage = getUserInput(); // A better way of getting user input
-				printf("Input: %i\n", tmpDieStorage); // DEBUG
+				myLog(1, __FILE__, __LINE__, 1, "Got %i from getUserInput().", tmpDieStorage);
 
-				if (tmpDieStorage < 0 || tmpDieStorage > lenghtOfArray) // Checks if the value is out of bounds (0-5)
+				if (tmpDieStorage < 0 || tmpDieStorage > diceArrayLength) // Checks if the value is out of bounds (0-5)
 				{
-					printf("Input out of bounds (0 - %i)\n", lenghtOfArray);
+					myLog(1, __FILE__, __LINE__, 1, "Player input %i is out of bounds.", tmpDieStorage);
+					printf("Input out of bounds (0 - %i)\n", diceArrayLength);
 				}
-				else // if (tmpDieStorage >= 0 && tmpDieStorage <= lenghtOfArray)
+				else
 				{
-					if (checkArrayValue(selectDiceArray, i) && tmpDieStorage > 0) // Checks if the position in the array is unused (0) if the user didn't enter 0 to stop
+					if (checkArrayValue(selectDiceArray, i) && tmpDieStorage > 0) // Checks if the position in the array is unused (0) & if the user didn't enter 0 to stop
 					{
 						for (int k = i; k >= 0; k--) // Checks if the enter value is already in the array
 						{
@@ -545,6 +536,7 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 						}
 						if (doubleEntryCheck) // Value is already chosen
 						{
+							myLog(1, __FILE__, __LINE__, 1, "Player input %i is already picked.", tmpDieStorage);
 							printf("Die already chosen\n");
 							doubleEntryCheck = 0;
 						}
@@ -557,10 +549,12 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 					{
 						if (tmpDieStorage == 0) // If the user want's to stop entering values
 						{
+							myLog(1, __FILE__, __LINE__, 1, "Player stopped input.", tmpDieStorage);
 							printf("Stopping input.\n");
 						}
 						else // If the position in the array is usedd already
 						{
+							myLog(2, __FILE__, __LINE__, 1, "Position taken by: %i.", selectDiceArray[i]);
 							printf("The value %i is in this position.\n", selectDiceArray[i]);
 						}
 					}
@@ -569,28 +563,22 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 			while (selectDiceArray[i] == 0 && tmpDieStorage != 0); // There is no value in the current position of the array and the user didn't want to stop
 			i++;
 		}
-		while (tmpDieStorage != 0 && i < lenghtOfArray); // The uses want's to enter a value and is not over the limit
+		while (tmpDieStorage != 0 && i < diceArrayLength); // The uses want's to enter a value and is not over the limit
 
-		if (clear)
-		{
-			printf("Returning folowing dice:\n");
-		}
-		else
-		{
-			printf("Keeping folowing dice:\n");
-		}
+		printf(clear ? "Returning folowing dice:\n" : "Keeping folowing dice:\n");
 
 		if (selectDiceArray[0])
 		{
 			i = 0;
-			for (int i = 0; i < lenghtOfArray; i++)
+			for (i = 0; i < diceArrayLength; i++)
 			{
 				printCounter += selectDiceArray[i] ? 1 : 0;
 			}
-			printf("Print counter: %i\n", printCounter); // DEBUG
+			i = 0;
 			while (selectDiceArray[i] && i < printCounter) // Loop to print kept dice
 			{
 				printf("Die: %i - with value: %i\n", selectDiceArray[i], diceArray[selectDiceArray[i] - 1]);
+				myLog(1, __FILE__, __LINE__, 1, "Selected die. Die: %i - with value: %i", selectDiceArray[i], diceArray[selectDiceArray[i] - 1]);
 				i++;
 			}
 			//while (selectDiceArray[i]); // Keeps going until the array is run trough or all value not 0 have been displayed
@@ -598,6 +586,7 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 		else
 		{
 			printf("None.\n");
+			myLog(1, __FILE__, __LINE__, 1, "Selected die. None.");
 		}
 
 		do // Loop for confirming input
@@ -607,8 +596,9 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 
 			if (confirm == 'n' || confirm == 'N')
 			{
+				myLog(1, __FILE__, __LINE__, 1, "Resetting input.");
 				i = 0;
-				for (int i = 0; i < lenghtOfArray; i++) // Clear the array to enter new values
+				for (int i = 0; i < diceArrayLength; i++) // Clear the array to enter new values
 				{
 					selectDiceArray[i] = 0;
 				}
@@ -626,30 +616,33 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 
 	keepDie = clear ? 1 : 0;
 
-	for (int i = 0; i < lenghtOfArray; i++) // Clearing the return array of removed values
+	for (int i = 0; i < diceArrayLength; i++) // Clearing the return array of removed values
 	{
-		for (int j = 0; j < lenghtOfArray; j++)
+		for (int j = 0; j < diceArrayLength; j++)
 		{
 			if ((selectDiceArray[j] - 1) == i)
 			{
-				printf("Keeping die: %i\n", i + 1); // DEBUG
+				myLog(1, __FILE__, __LINE__, 1, "Keeping die: %i.", i + 1);
 				keepDie = clear ? 0 : 1;
 			}
 		}
 
 		if (!keepDie)
 		{
-			printf("Removing die: %i\n", i + 1); // DEBUG
+			myLog(1, __FILE__, __LINE__, 1, "Removing die: %i.", i + 1);
 			diceArray[i] = 0;
 		}
 
 		keepDie = clear ? 1 : 0;
 	}
 
-	for (int i = 0; i < lenghtOfArray; i++) // Moving > 0 values in array to the left
+	myLog(1, __FILE__, __LINE__, 1, "Shifting dice array.");
+	for (int i = 0; i < diceArrayLength; i++) // Moving > 0 values in array to the left
 	{
+		myLog(1, __FILE__, __LINE__, 1, "Position: %i.", i);
 		if (diceArray[i])
 		{
+			myLog(1, __FILE__, __LINE__, 1, "Putting value: %i at: %i.", diceArray[i], arrayPosCounter);
 			returnArray[arrayPosCounter] = diceArray[i];
 			arrayPosCounter++;
 		}
@@ -666,37 +659,37 @@ char * selectDice(char * diceArray, char lenghtOfArray, char clear)
 */
 char checkArrayValue(char * array, int pos)
 {
+	myLog(1, __FILE__, __LINE__, 1, "Checking if array position %i is clear.", pos);
 	if (!array[pos])
 	{
-		printf("Position clear\n"); // DEBUG
+		myLog(1, __FILE__, __LINE__, 1, "Position %i is clear.", pos);
 		return 1;
 	}
-	printf("Position in use\n"); // DEBUG
+	myLog(1, __FILE__, __LINE__, 1, "Position %i in not clear.", pos);
 	return 0;
 }
 
 /*
 * Rolls a set amount of random dice.
 * Returns all rolled dice.
-* @param: (char) diceCount Amount of dice you would like to roll.
+* @param: (char) diceCount Amount of dice you would like to roll; (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
 * @return: (char *) An array with all dice values.
 */
-char * rollDice(char diceCount)
+char * rollDice(char diceCount, char * returnArray, char returnArrayLength)
 {
-	static char dice[DICE_PER_GAME];
-
-	for (int i = 0; i < DICE_PER_GAME; i++)
+	for (int i = 0; i < returnArrayLength; i++)
 	{
-		dice[i] = 0; // Filling the static array with 0's for reuse
+		returnArray[i] = 0; // Filling the return array with 0's for reuse
 	}
 
 	for (int i = 0; i < diceCount; i++)
 	{
 		printf("Die - %i:\n", i + 1);
-		dice[i] = rollRandomDie(); // DEBUG SETS TO RANDOM ON RELEASE
+		returnArray[i] = rollRandomDie();
+		myLog(1, __FILE__, __LINE__, 1, "Die %i = %i.", i + 1, returnArray[i]);
 	}
 
-	return dice;
+	return returnArray;
 }
 
 /*
@@ -706,7 +699,7 @@ char * rollDice(char diceCount)
 */
 char rollRandomDie(void)
 {
-	printf("Rolling random die!\n"); // DEBUG
+	myLog(1, __FILE__, __LINE__, 1, "Rolling a random die.");
 	return rollDie((rand() % 6) + 1);
 }
 
@@ -741,6 +734,7 @@ char rollDie(char n)
 			break;
 		default:
 			printf("An error occourt.\nFailed to roll a die (%i)", n);
+			myLog(3, __FILE__, __LINE__, 1, "Failed to roll a die (%i).", n);
 			exit(EXIT_FAILURE);
 			break;
 	}
@@ -764,7 +758,7 @@ int getUserInput(void)
 		int value;
 		if (sscanf(buffer, "%d", &value) == 1 && value >= 0)
 		{
-			printf("Input return value: %i\n", value); // DEBUG
+			myLog(1, __FILE__, __LINE__, 1, "Returning %i from getUserInput().", value);
 			return value;
 		}
 		fflush(stdout);

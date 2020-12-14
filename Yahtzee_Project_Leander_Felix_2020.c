@@ -4,84 +4,127 @@
 * Description: Main file to play Yahtzee
 */
 
+// gcc -Wall -pedantic -c .\myLog.c -o .\myLog.o
+// gcc -Wall -pedantic -c .\graphicsYahtzee.c -o .\graphicsYahtzee.o
+// gcc -Wall -pedantic -c .\game.c -o .\game.o
+// gcc -Wall -pedantic .\Yahtzee_Project_Leander_Felix_2020.c .\graphicsYahtzee.o .\game.o .\myLog.o -o test.exe
+
 // Libraries
+#include <string.h>
+
 #include "game.h"
-#include "graphicsYahtzee.h"
+//#include "graphicsYahtzee.h"
 
 int main(void)
 {
 	srand(time(NULL)); // Initialize randomness
 
-	myLog("INFO", "Opening & clearing log file success.", 0); // -> INFO :: date - time :: File:.\Yahtzee_Project_Leander_Felix_2020.c (line: 58) :: Log file open success
-	//myLog("INFO", "This is a test %i", 0, 0);
+	/*
+	* Use this to log lines to the output log.
+	* void myLog(char logLevel, char * file, int line, char append, const char * message, ...)
+	* @param:
+	* logLevel:
+	*		- 1 : INFO : Just normal log info.
+	*		- 2 : WARN : Warning that did not terminate the program but should not happen.
+	*		- 3 : CRIT : Critical warning that terminates the program.
+	* file: from what file the message is. You can use __FILE__
+	* line: from what line the message is. You can use __LINE__
+	* append: Wether to append (1) or not (0). If you do not append it will clear to file.
+	* message: A log message you would like to put in the log.
+	* @return:VOID
+	* Output.log example line
+	* logLevel :: hh:mm:ss - dd/mm/yyyy :: File: FILE_LOCATION (line: LINE IN CODE) :: message
+	* message can be used like printf(), ... "This is a number: %i", 1); will put "This is a number: 1" as message in the log file.
+	*/
+	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 29) :: Opening & clearing log file success.
 
-	int scorePlayerOne[MAX_GAMES][MAX_ROUNDS + 1]; // Player 1 score array
-	int scorePlayerTwo[MAX_GAMES][MAX_ROUNDS + 1]; // Player 2 score array
+	int playerOneScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 1 score array
+	int playerTwoScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 2 score array
 
-	int scorePlayerOneRound[MAX_ROUNDS + 1];
-	int scorePlayerTwoRound[MAX_ROUNDS + 1];
+	int playerOneScoreRound[MAX_ROUNDS + 1];
+	int playerTwoScoreRound[MAX_ROUNDS + 1];
 
 	int * playerOneDicePointer; // Pointer to player 1's dice array
 	int * playerTwoDicePointer; // Pointer to player 2's dice array
 
+	char playerOneName[50]; // Name of player 1
+	char playerTwoName[50]; // Name of player 2
+
+	do
+	{
+		printf("Player one name: ");
+		gets(playerOneName);
+	}
+	while(!strcmp(playerOneName, ""));
+	myLog(1, __FILE__, __LINE__, 1, "Name player one: %s", playerOneName);
+	do
+	{
+		printf("Player two name: ");
+		gets(playerTwoName);
+	}
+	while(!strcmp(playerTwoName, ""));
+	myLog(1, __FILE__, __LINE__, 1, "Name player two: %s", playerTwoName);
+
+	myLog(1, __FILE__, __LINE__, 1, "Clearing score arrays.");
 	for (int i = 0; i < MAX_GAMES; i++) // Clear the score arrays
 	{
 		for (int j = 0; j < MAX_ROUNDS + 1; j++)
 		{
-			scorePlayerOne[i][j] = 0;
-			scorePlayerTwo[i][j] = 0;
+			playerOneScore[i][j] = 0;
+			playerTwoScore[i][j] = 0;
 		}
 	}
 
+	myLog(1, __FILE__, __LINE__, 1, "Clearing round score arrays with length: %i.", MAX_ROUNDS);
 	for (int i = 0; i < MAX_ROUNDS + 1; i++) // Clear the round score arrays
 	{
-		scorePlayerOneRound[i] = 0;
-		scorePlayerTwoRound[i] = 0;
+		playerOneScoreRound[i] = 0;
+		playerTwoScoreRound[i] = 0;
 	}
 
 	printIntro(); // Annoying while trying to debug. Turn on before release!
 	system("PAUSE");
 	for (int i = 0; i < MAX_GAMES; i++)
 	{
+		myLog(1, __FILE__, __LINE__, 1, "Running game %i / %i", i + 1, MAX_GAMES);
 		printf("Game: %i / %i\n", i + 1, MAX_GAMES);
 		for (int j = 0; j < MAX_GAMES; j++)
 		{
+			myLog(1, __FILE__, __LINE__, 1, "Running round %i / %i", j + 1, MAX_ROUNDS);
 			printf("Round: %i / %i\n", j + 1, MAX_ROUNDS);
-			printf("Player one's turn\n");
+			printf("%s's turn\n", playerOneName);
 			system("PAUSE");
-			playerOneDicePointer = playGame(scorePlayerOneRound, MAX_REROLLS);
+			playerOneDicePointer = playGame(playerOneScoreRound);
 			for (int k = 0; k < 13; k++)
 			{
-				scorePlayerOneRound[k] = * (playerOneDicePointer + k);
-				printf("Score %i = %i\n", i, scorePlayerOneRound[k]); // DEBUG
+				playerOneScoreRound[k] = * (playerOneDicePointer + k);
+				printf("Score %i = %i\n", k, playerOneScoreRound[k]); // DEBUG
 			}
 
-			printf("Player two's turn\n");
+			printf("%s's turn\n", playerTwoName);
 			system("PAUSE");
-			playerTwoDicePointer = playGame(scorePlayerTwoRound, MAX_REROLLS);
+			playerTwoDicePointer = playGame(playerTwoScoreRound);
 			for (int k = 0; k < 13 + 1; k++)
 			{
-				scorePlayerTwoRound[k] = * (playerTwoDicePointer + k);
-				printf("Score %i = %i\n", i, scorePlayerTwoRound[k]); // DEBUG
+				playerTwoScoreRound[k] = * (playerTwoDicePointer + k);
+				printf("Score %i = %i\n", k, playerTwoScoreRound[k]); // DEBUG
 			}
 
 			for (int k = 0; k < MAX_ROUNDS + 1; k++)
 			{
-				scorePlayerOne[i][k] = scorePlayerOneRound[k];
-				scorePlayerTwo[i][k] = scorePlayerTwoRound[k];
+				playerOneScore[i][k] = playerOneScoreRound[k];
+				playerTwoScore[i][k] = playerTwoScoreRound[k];
 			}
 
-			printf("Player one's score:\n");
-			printScore(scorePlayerOne);
-			printf("Player two's score:\n");
-			printScore(scorePlayerTwo);
+			printScore(playerOneScore, playerOneName);
+			printScore(playerTwoScore, playerTwoName);
 			system("PAUSE");
 		}
 	}
 
-	printScore(scorePlayerOne);
-	printScore(scorePlayerTwo);
-	getWinner(scorePlayerOne, scorePlayerTwo);
+	printScore(playerOneScore, playerOneName);
+	printScore(playerTwoScore, playerTwoName);
+	getWinner(playerOneScore, playerTwoScore);
 
 	exit(EXIT_SUCCESS);
 

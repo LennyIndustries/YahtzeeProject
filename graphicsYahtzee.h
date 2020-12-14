@@ -2,9 +2,10 @@
 #define __GRAPHICSYAHTZEE_H__
 
 // Libraries
-#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+
+#include "myLog.h"
+
 
 // Definitions
 #define MAX_GAMES 5 // Maximum of games played.
@@ -13,8 +14,7 @@
 #define DICE_PER_GAME 5 // Total dice in the game
 
 // Functions
-void myLog(char * logLevel, char * message, char append);
-void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1]);
+void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1], char * playerName);
 char dice1(char i);
 char dice2(char i);
 char dice3(char i);
