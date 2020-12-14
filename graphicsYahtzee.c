@@ -20,16 +20,14 @@ void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1], char * playerName)
 	int scoreSumTotal = 0;
 
 	printf("%s's score\n", playerName);
+	myLog(1, __FILE__, __LINE__, 1, "Printing score for: %s", playerName);
 
 	for (int i = 0; i < MAX_GAMES; i++)
 	{
-		printf("I = %i\n", i); // DEBUG
 		for (int j = 0; j < MAX_ROUNDS + 1; j++)
 		{
-			printf("J = %i\n", j); // DEBUG
 			if (score[i][j] > 0)
 			{
-				printf("Score over 0: %i\n", score[i][j]); // DEBUG
 				scoreSumTotal += score[i][j];
 
 				switch (i)
