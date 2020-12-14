@@ -23,7 +23,6 @@ int main(void)
 	/*
 	* Use this to log lines to the output log.
 	* void myLog(char logLevel, char * file, int line, char append, const char * message, ...)
-	* @param:
 	* logLevel:
 	*		- 1 : INFO : Just normal log info.
 	*		- 2 : WARN : Warning that did not terminate the program but should not happen.
@@ -32,12 +31,11 @@ int main(void)
 	* line: from what line the message is. You can use __LINE__
 	* append: Wether to append (1) or not (0). If you do not append it will clear to file.
 	* message: A log message you would like to put in the log.
-	* @return:VOID
 	* Output.log example line
 	* logLevel :: hh:mm:ss - dd/mm/yyyy :: File: FILE_LOCATION (line: LINE IN CODE) :: message
 	* message can be used like printf(), ... "This is a number: %i", 1); will put "This is a number: 1" as message in the log file.
 	*/
-	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 29) :: Opening & clearing log file success.
+	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 38) :: Opening & clearing log file success.
 
 	int playerOneScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 1 score array
 	int playerTwoScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 2 score array

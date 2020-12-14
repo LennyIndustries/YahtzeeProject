@@ -7,7 +7,7 @@
 
 /*
 * Prints the score screen
-* @param: (char) score The scores to print; (char *) playerName The name of the player.
+* @param: (int) score[MAX_GAMES][MAX_ROUNDS + 1] The scores to print; (char *) playerName The name of the player.
 * @return: VOID
 */
 void printScore(int score[MAX_GAMES][MAX_ROUNDS + 1], char * playerName)

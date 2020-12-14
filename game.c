@@ -7,8 +7,8 @@
 
 /*
 * Main function to play a game
-* @param: (char) scoreArray[] the array with all the scores of the player.
-* @return: (char *) score(dice, scoreArray)
+* @param: (char *) scoreArray The array with all the scores of the player.
+* @return: (int *) score(dice, scoreArray)
 */
 int * playGame(int * scoreArray)
 {
@@ -136,7 +136,7 @@ int * playGame(int * scoreArray)
 
 /*
 * Compares to array and find the highes one.
-* @param: (char) playerOneArray[] The array of player one; (char) playerTwoArray[] The array for player two.
+* @param: (int) playerOneArray[MAX_GAMES][MAX_ROUNDS + 1] The array of player one; (int) playerTwoArray[MAX_GAMES][MAX_ROUNDS + 1] The array for player two; (char *) playerOneName Name of player one; (char *) playerTwoName Name of player two.
 * @return: VOID
 */
 void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray[MAX_GAMES][MAX_ROUNDS + 1], char * playerOneName, char * playerTwoName)
@@ -177,8 +177,8 @@ void getWinner(int playerOneArray[MAX_GAMES][MAX_ROUNDS + 1], int playerTwoArray
 
 /*
 * This function calculates the score from a givven dice array.
-* @param: (char) dice[] The dice array; (char) scoreArray[] the score array for the player.
-* @return: (char *) The array for the player with the new scores.
+* @param: (char *) dice The dice array; (int *) scoreArray the score array for the player.
+* @return: (int *) scoreArray The array for the player with the new scores.
 */
 int * score(char * dice, int * scoreArray)
 {
@@ -459,7 +459,7 @@ int * score(char * dice, int * scoreArray)
 
 /*
 * All the dice in the givven array are printed.
-* @param: (char) dice[] the dice array
+* @param: (char *) dice the dice array
 * @return: VOID
 */
 void printDice(char * dice)
@@ -475,7 +475,7 @@ void printDice(char * dice)
 /*
 * Rolls a set of dice.
 * @param: (char) amountOfDice Amount of dice in the roll; (char) forceKeep Wether or not the player can choose what dice to keep (0, player choise; 1 Force the player to keep all of them); (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
-* @return: (char *) the dice array with all dice.
+* @return: (char *) returnArray The dice array with all dice.
 */
 char * rollDiceSet(char amountOfDice, char forceKeep, char * returnArray, char returnArrayLength)
 {
@@ -510,8 +510,8 @@ char * rollDiceSet(char amountOfDice, char forceKeep, char * returnArray, char r
 
 /*
 * Lets the player select what dice to keep or remove from a givven array.
-* @param: (char) diceArray The array of dice; (char) lengthOfDiceArray The length of the givven array; (char) clear Wether or not to clear the chosen values (0 keep, 1 clear); (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
-* @return: (char *) The dice array with all the dice that are left.
+* @param: (char *) diceArray The array of dice; (char) lengthOfDiceArray The length of the givven array; (char) clear Wether or not to clear the chosen values (0 keep, 1 clear); (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
+* @return: (char *) returnArray The dice array with all the dice that are left.
 */
 char * selectDice(char * diceArray, char diceArrayLength, char clear, char * returnArray, char returnArrayLength)
 {
@@ -677,7 +677,7 @@ char * selectDice(char * diceArray, char diceArrayLength, char clear, char * ret
 /*
 * Checks a position in an array to be 0.
 * Returns 1 or 0 on a success or fail.
-* @param: (char) scoreArray[] The array you want checked, (char) pos The position you would like to check.
+* @param: (char *) array The array you want checked, (int) pos The position you would like to check.
 * @return: (char) 1 (success) or 0 (failed).
 */
 char checkArrayValue(char * array, int pos)
@@ -695,7 +695,7 @@ char checkArrayValue(char * array, int pos)
 /*
 * Rolls a set amount of random dice.
 * Returns all rolled dice.
-* @param: (char) diceCount Amount of dice you would like to roll; (char *) returnArray The array you would like to heve return it to; (char) returnArrayLength the length.
+* @param: (char) diceCount Amount of dice you would like to roll; (char *) returnArray The array you would like to heve return it to.
 * @return: (char *) An array with all dice values.
 */
 char * rollDice(char diceCount, char * returnArray)
@@ -713,7 +713,7 @@ char * rollDice(char diceCount, char * returnArray)
 /*
 * Rolls a random die.
 * @param: void
-* @return: rollDie() (char) What die was rolled as numeric value.
+* @return: (char) rollDie() What die was rolled as numeric value.
 */
 char rollRandomDie(void)
 {
@@ -723,8 +723,8 @@ char rollRandomDie(void)
 
 /*
 * Rolls a given die.
-* @param: n (char) What die needs to be rolled.
-* @return: die (char) What die was rolled as numeric value.
+* @param: (char) n What die needs to be rolled.
+* @return: (char) die What die was rolled as numeric value.
 */
 char rollDie(char n)
 {
@@ -765,7 +765,7 @@ char rollDie(char n)
 * Credit: chux - Reinstate Monica : https://stackoverflow.com/users/2410359/chux-reinstate-monica
 * Gets input from the user but only allows numbers.
 * @param: VOID
-* @return: int The number chosen by the user.
+* @return: (int) value/-1 The number chosen by the user.
 */
 int getUserInput(void)
 {
