@@ -66,7 +66,7 @@ int main(void)
 		}
 
 		printf("Enter player names.\nEntering 'exit' will stop the program\n");
-		do
+		do // Getting player one's name
 		{
 			printf("Player one name: ");
 			gets(playerOneName);
@@ -84,7 +84,7 @@ int main(void)
 			exit(EXIT_SUCCESS);
 		}
 
-		do
+		do // Getting player two's name
 		{
 			printf("Player two name: ");
 			gets(playerTwoName);
@@ -123,14 +123,14 @@ int main(void)
 		{
 			myLog(1, __FILE__, __LINE__, 1, "Running game %i / %i", i + 1, MAX_GAMES);
 			printf("Game: %i / %i\n", i + 1, MAX_GAMES);
-			for (int j = 0; j < MAX_GAMES; j++)
+			for (int j = 0; j < MAX_ROUNDS; j++)
 			{
 				myLog(1, __FILE__, __LINE__, 1, "Running round %i / %i", j + 1, MAX_ROUNDS);
 				printf("Round: %i / %i\n", j + 1, MAX_ROUNDS);
 				printf("%s's turn\n", playerOneName);
 				system("PAUSE");
 				playerOneDicePointer = playGame(playerOneScoreRound);
-				for (int k = 0; k < 13; k++)
+				for (int k = 0; k < MAX_ROUNDS + 1; k++)
 				{
 					playerOneScoreRound[k] = * (playerOneDicePointer + k);
 					myLog(1, __FILE__, __LINE__, 1, "Score %i = %i", k, playerOneScoreRound[k]);
@@ -139,7 +139,7 @@ int main(void)
 				printf("%s's turn\n", playerTwoName);
 				system("PAUSE");
 				playerTwoDicePointer = playGame(playerTwoScoreRound);
-				for (int k = 0; k < 13 + 1; k++)
+				for (int k = 0; k < MAX_ROUNDS + 1 + 1; k++)
 				{
 					playerTwoScoreRound[k] = * (playerTwoDicePointer + k);
 					myLog(1, __FILE__, __LINE__, 1, "Score %i = %i", k, playerTwoScoreRound[k]);
