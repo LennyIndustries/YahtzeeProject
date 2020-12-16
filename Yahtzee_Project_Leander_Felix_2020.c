@@ -17,7 +17,7 @@
 //#include "graphicsYahtzee.h"
 
 int main(void)
-{
+{ // Put in FSM
 	srand(time(NULL)); // Initialize randomness
 
 	/*
@@ -43,8 +43,8 @@ int main(void)
 	int playerOneScoreRound[MAX_ROUNDS + 1];
 	int playerTwoScoreRound[MAX_ROUNDS + 1];
 
-	int * playerOneDicePointer; // Pointer to player 1's dice array
-	int * playerTwoDicePointer; // Pointer to player 2's dice array
+	// int * playerOneDicePointer; // Pointer to player 1's dice array
+	// int * playerTwoDicePointer; // Pointer to player 2's dice array
 
 	char playerOneName[50]; // Name of player 1
 	char playerTwoName[50]; // Name of player 2
@@ -64,7 +64,7 @@ int main(void)
 			playerOneLowerName[i] = '\0';
 			playerTwoLowerName[i] = '\0';
 		}
-
+// Move to function
 		printf("Enter player names.\nEntering 'exit' will stop the program\n");
 		do // Getting player one's name
 		{
@@ -91,11 +91,11 @@ int main(void)
 		}
 		while(!strcmp(playerTwoName, ""));
 		myLog(1, __FILE__, __LINE__, 1, "Name player two: %s", playerTwoName);
-		for(int i = 0; playerTwoName[i]; i++)
+		for(int i = 0; playerTwoName[i]; i++) // Creat one function to do it with a full string
 		{
 			playerTwoLowerName[i] = tolower(playerTwoName[i]);
 		}
-		if (!strcmp(playerTwoLowerName, "exit"))
+		if (!strcmp(playerTwoLowerName, "exit")) // Create function to detect 'stop' and 'exit' and retun an int -1, 0, 1 (exit, nothing, stop). Create confirm exit/stop function. Call confirm from check function.
 		{
 			printf("Exiting on user request.\n");
 			myLog(1, __FILE__, __LINE__, 1, "Program terminated on player two's request.");
@@ -120,7 +120,7 @@ int main(void)
 		}
 
 		for (int i = 0; i < MAX_GAMES; i++)
-		{
+		{ // Move to function
 			myLog(1, __FILE__, __LINE__, 1, "Running game %i / %i", i + 1, MAX_GAMES);
 			printf("Game: %i / %i\n", i + 1, MAX_GAMES);
 			for (int j = 0; j < MAX_ROUNDS; j++)
@@ -129,23 +129,13 @@ int main(void)
 				printf("Round: %i / %i\n", j + 1, MAX_ROUNDS);
 				printf("%s's turn\n", playerOneName);
 				system("PAUSE");
-				playerOneDicePointer = playGame(playerOneScoreRound);
-				for (int k = 0; k < MAX_ROUNDS + 1; k++)
-				{
-					playerOneScoreRound[k] = * (playerOneDicePointer + k);
-					myLog(1, __FILE__, __LINE__, 1, "Score %i = %i", k, playerOneScoreRound[k]);
-				}
+				playGame(playerOneScoreRound);
 
 				printf("%s's turn\n", playerTwoName);
 				system("PAUSE");
-				playerTwoDicePointer = playGame(playerTwoScoreRound);
-				for (int k = 0; k < MAX_ROUNDS + 1 + 1; k++)
-				{
-					playerTwoScoreRound[k] = * (playerTwoDicePointer + k);
-					myLog(1, __FILE__, __LINE__, 1, "Score %i = %i", k, playerTwoScoreRound[k]);
-				}
+				playGame(playerTwoScoreRound);
 
-				for (int k = 0; k < MAX_ROUNDS + 1; k++)
+				for (int k = 0; k < MAX_ROUNDS + 1; k++) // Move to function
 				{
 					playerOneScore[i][k] = playerOneScoreRound[k];
 					playerTwoScore[i][k] = playerTwoScoreRound[k];
@@ -156,7 +146,7 @@ int main(void)
 				system("PAUSE");
 			}
 		}
-
+// Move to function
 		printScore(playerOneScore, playerOneName);
 		printScore(playerTwoScore, playerTwoName);
 		getWinner(playerOneScore, playerTwoScore, playerOneName, playerTwoName);

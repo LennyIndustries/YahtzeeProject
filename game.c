@@ -273,6 +273,12 @@ int * score(char * dice, int * scoreArray)
 		yahtzee = 1;
 	}
 
+	if (((totalOne == 3) || (totalTwo == 3) || (totalThree == 3) || (totalFour == 3) || (totalFive == 3) || (totalSix == 3)) && ((totalOne == 2) || (totalTwo == 2) || (totalThree == 2) || (totalFour == 2) || (totalFive == 2) || (totalSix == 2))) // Full house
+	{
+		myLog(1, __FILE__, __LINE__, 1, "Full house.");
+		fullHouse = 1;
+	}
+
 	for (int i = 0; i < DICE_PER_GAME; i++) // Checks if there is a sequence.
 	{
 		sequentialCheckStorage = dice[i];
@@ -313,6 +319,7 @@ int * score(char * dice, int * scoreArray)
 	{
 		myLog(1, __FILE__, __LINE__, 1, "Yahtzee bonus.");
 		yahtzeeBonus = 1;
+		fullHouse = 1;
 	}
 
 	do // Lets the user pick a score until the user confirms score
