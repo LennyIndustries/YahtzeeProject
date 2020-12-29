@@ -10,11 +10,17 @@
 // gcc -Wall -pedantic .\Yahtzee_Project_Leander_Felix_2020.c .\graphicsYahtzee.o .\game.o .\myLog.o -o test.exe
 
 // Libraries
-#include <string.h>
-#include <ctype.h>
-
 #include "game.h"
-//#include "graphicsYahtzee.h"
+
+// Enum
+typedef enum
+{
+	Intro_State,
+	Name_State,
+	Game_State,
+	Score_State,
+}
+gameState;
 
 int main(void)
 { // Put in FSM
@@ -35,7 +41,7 @@ int main(void)
 	* logLevel :: hh:mm:ss - dd/mm/yyyy :: File: FILE_LOCATION (line: LINE IN CODE) :: message
 	* message can be used like printf(), ... "This is a number: %i", 1); will put "This is a number: 1" as message in the log file.
 	*/
-	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 38) :: Opening & clearing log file success.
+	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 34) :: Opening & clearing log file success.
 
 	int playerOneScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 1 score array
 	int playerTwoScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 2 score array
@@ -43,112 +49,85 @@ int main(void)
 	int playerOneScoreRound[MAX_ROUNDS + 1];
 	int playerTwoScoreRound[MAX_ROUNDS + 1];
 
-	// int * playerOneDicePointer; // Pointer to player 1's dice array
-	// int * playerTwoDicePointer; // Pointer to player 2's dice array
+	char playerOneName[NAME_LENGTH]; // Name of player 1
+	char playerTwoName[NAME_LENGTH]; // Name of player 2
 
-	char playerOneName[50]; // Name of player 1
-	char playerTwoName[50]; // Name of player 2
-	char playerOneLowerName[50]; // Name of player 1
-	char playerTwoLowerName[50]; // Name of player 2
-
-	printIntro(); // Annoying while trying to debug. Turn on before release!
-	system("PAUSE");
+	gameState nextState = Intro_State;
 
 	while (1) // Continues loop until user request exit on start of the game
 	{
-		myLog(1, __FILE__, __LINE__, 1, "Clearing name strings.");
-		for (int i = 0; i < 50; i++) // Clearing player name strings
+		switch (nextState)
 		{
-			playerOneName[i] = '\0';
-			playerTwoName[i] = '\0';
-			playerOneLowerName[i] = '\0';
-			playerTwoLowerName[i] = '\0';
-		}
-// Move to function
-		printf("Enter player names.\nEntering 'exit' will stop the program\n");
-		do // Getting player one's name
-		{
-			printf("Player one name: ");
-			gets(playerOneName);
-		}
-		while(!strcmp(playerOneName, ""));
-		myLog(1, __FILE__, __LINE__, 1, "Name player one: %s", playerOneName);
-		for(int i = 0; playerOneName[i]; i++)
-		{
-			playerOneLowerName[i] = tolower(playerOneName[i]);
-		}
-		if (!strcmp(playerOneLowerName, "exit"))
-		{
-			printf("Exiting on user request.\n");
-			myLog(1, __FILE__, __LINE__, 1, "Program terminated on player one's request.");
-			exit(EXIT_SUCCESS);
-		}
-
-		do // Getting player two's name
-		{
-			printf("Player two name: ");
-			gets(playerTwoName);
-		}
-		while(!strcmp(playerTwoName, ""));
-		myLog(1, __FILE__, __LINE__, 1, "Name player two: %s", playerTwoName);
-		for(int i = 0; playerTwoName[i]; i++) // Creat one function to do it with a full string
-		{
-			playerTwoLowerName[i] = tolower(playerTwoName[i]);
-		}
-		if (!strcmp(playerTwoLowerName, "exit")) // Create function to detect 'stop' and 'exit' and retun an int -1, 0, 1 (exit, nothing, stop). Create confirm exit/stop function. Call confirm from check function.
-		{
-			printf("Exiting on user request.\n");
-			myLog(1, __FILE__, __LINE__, 1, "Program terminated on player two's request.");
-			exit(EXIT_SUCCESS);
-		}
-
-		myLog(1, __FILE__, __LINE__, 1, "Clearing score arrays.");
-		for (int i = 0; i < MAX_GAMES; i++) // Clear the score arrays
-		{
-			for (int j = 0; j < MAX_ROUNDS + 1; j++)
-			{
-				playerOneScore[i][j] = 0;
-				playerTwoScore[i][j] = 0;
-			}
-		}
-
-		myLog(1, __FILE__, __LINE__, 1, "Clearing round score arrays with length: %i.", MAX_ROUNDS);
-		for (int i = 0; i < MAX_ROUNDS + 1; i++) // Clear the round score arrays
-		{
-			playerOneScoreRound[i] = 0;
-			playerTwoScoreRound[i] = 0;
-		}
-
-		for (int i = 0; i < MAX_GAMES; i++)
-		{ // Move to function
-			myLog(1, __FILE__, __LINE__, 1, "Running game %i / %i", i + 1, MAX_GAMES);
-			printf("Game: %i / %i\n", i + 1, MAX_GAMES);
-			for (int j = 0; j < MAX_ROUNDS; j++)
-			{
-				myLog(1, __FILE__, __LINE__, 1, "Running round %i / %i", j + 1, MAX_ROUNDS);
-				printf("Round: %i / %i\n", j + 1, MAX_ROUNDS);
-				printf("%s's turn\n", playerOneName);
+			case Intro_State:
+				nextState = Name_State;
+				printIntro(); // Annoying while trying to debug. Turn on before release!
 				system("PAUSE");
-				playGame(playerOneScoreRound);
+				break;
+			case Name_State:
+				nextState = Game_State;
+				clearCharArray(playerOneName, NAME_LENGTH, 1);
+				clearCharArray(playerTwoName, NAME_LENGTH, 1);
 
-				printf("%s's turn\n", playerTwoName);
-				system("PAUSE");
-				playGame(playerTwoScoreRound);
-
-				for (int k = 0; k < MAX_ROUNDS + 1; k++) // Move to function
+				printf("Enter player names.\nEntering 'exit' will stop the program\nMax lenght is: %i.\n", NAME_LENGTH);
+				printf("Player one.\n");
+				getPlayerName(playerOneName);
+				printf("Player two.\n");
+				getPlayerName(playerTwoName);
+				break;
+			case Game_State:
+				nextState = Score_State;
+				myLog(1, __FILE__, __LINE__, 1, "Clearing 2 dim score arrays.");
+				for (int i = 0; i < MAX_GAMES; i++) // Clear the score arrays
 				{
-					playerOneScore[i][k] = playerOneScoreRound[k];
-					playerTwoScore[i][k] = playerTwoScoreRound[k];
+					for (int j = 0; j < MAX_ROUNDS + 1; j++)
+					{
+						playerOneScore[i][j] = 0;
+						playerTwoScore[i][j] = 0;
+					}
 				}
 
+				for (int i = 0; i < MAX_GAMES; i++)
+				{
+					clearIntArray(playerOneScoreRound, MAX_ROUNDS + 1, 0);
+					clearIntArray(playerTwoScoreRound, MAX_ROUNDS + 1, 0);
+
+					myLog(1, __FILE__, __LINE__, 1, "Running game %i / %i", i + 1, MAX_GAMES);
+					printf("Game: %i / %i\n", i + 1, MAX_GAMES);
+					for (int j = 0; j < MAX_ROUNDS; j++)
+					{
+						myLog(1, __FILE__, __LINE__, 1, "Running round %i / %i", j + 1, MAX_ROUNDS);
+						printf("Round: %i / %i\n", j + 1, MAX_ROUNDS);
+						printf("%s's turn\n", playerOneName);
+						system("PAUSE");
+						playGame(playerOneScoreRound);
+
+						printf("%s's turn\n", playerTwoName);
+						system("PAUSE");
+						playGame(playerTwoScoreRound);
+
+						for (int k = 0; k < MAX_ROUNDS + 1; k++)
+						{
+							playerOneScore[i][k] = playerOneScoreRound[k];
+							playerTwoScore[i][k] = playerTwoScoreRound[k];
+						}
+
+						printScore(playerOneScore, playerOneName);
+						printScore(playerTwoScore, playerTwoName);
+						system("PAUSE");
+					}
+				}
+				break;
+			case Score_State:
+				nextState = Name_State; // Skipping intro
 				printScore(playerOneScore, playerOneName);
 				printScore(playerTwoScore, playerTwoName);
-				system("PAUSE");
-			}
+				getWinner(playerOneScore, playerTwoScore, playerOneName, playerTwoName);
+				break;
+			default:
+				printf("Could not determine state.\nExiting!");
+				myLog(3, __FILE__, __LINE__, 1, "Could not determine state.");
+				exit(EXIT_FAILURE);
+				break;
 		}
-// Move to function
-		printScore(playerOneScore, playerOneName);
-		printScore(playerTwoScore, playerTwoName);
-		getWinner(playerOneScore, playerTwoScore, playerOneName, playerTwoName);
 	}
 }

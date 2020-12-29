@@ -426,13 +426,14 @@ int * score(char * dice, int * scoreArray)
 					printf("Would you like to set this score (y/n)?\n");
 					scanf(" %c", &confirm);
 
-					if (confirm == 'n' && confirm == 'N')
+					if (confirm == 'n' || confirm == 'N')
 					{
+						printf("Returning to selection\n");
 						break;
 					}
 					else if (confirm != 'y' && confirm != 'Y')
 					{
-						printf("Invalid input!\n");
+						printf("Invalid input: '%c'!\n", confirm);
 					}
 				}
 				while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N'));
@@ -540,7 +541,7 @@ char * selectDice(char * diceArray, char diceArrayLength, char clear, char * ret
 
 	do // Main loop for selecting dice
 	{
-		printf(clear ? "Enter the number of the die you would like to return.\nEnter 0 to stop.\n" : "Enter the number of the die you would like to keep.\nEnter 0 to stop.\n");
+		printf(clear ? "Enter the number of the die you would like to return.\nEnter '0' or 'stop' to stop.\nEnter 'exit' to exit the program\n" : "Enter the number of the die you would like to keep.\nEnter '0' or 'stop' to stop.\nEnter 'exit' to exit the program\n");
 		do // Loop for entering dice
 		{
 			do // Loop for entering ONE die
@@ -777,6 +778,7 @@ char rollDie(char n)
 int getUserInput(void)
 {
 	char buffer[10];
+	clearCharArray(buffer, 10, 1);
 	fflush(stdout);
 	while (fgets(buffer, sizeof buffer, stdin))
 	{
@@ -786,7 +788,127 @@ int getUserInput(void)
 			myLog(1, __FILE__, __LINE__, 1, "Returning %i from getUserInput().", value);
 			return value;
 		}
+		if (checkInput(buffer))
+		{
+			myLog(1, __FILE__, __LINE__, 1, "Returning 0 from getUserInput(). Player requested stop.");
+			return 0;
+		}
 		fflush(stdout);
 	}
 	return -1;
+}
+
+/*
+* Converts a char string to all lower case
+* @param: (char *) string The string you would like to set to lower.
+* @return: (char *) The return string all lower.
+*/
+char * toLowerString(char* string)
+{
+	char tmpStorageString[NAME_LENGTH];
+	for (int i = 0; i < NAME_LENGTH; i++) // Clearing string array
+	{
+		tmpStorageString[i] = '\0';
+	}
+
+	for(int i = 0; string[i]; i++)
+	{
+		tmpStorageString[i] = tolower(string[i]);
+	}
+
+	myLog(1, __FILE__, __LINE__, 1, "Converted %s to %s", string, tmpStorageString);
+	string = tmpStorageString;
+
+	return string;
+}
+
+char * clearCharArray(char * array, int arrayLenght, char character)
+{
+	myLog(1, __FILE__, __LINE__, 1, "Clearing array with length: %i. Character: %i", arrayLenght, character);
+	for (int i = 0; i < arrayLenght; i++)
+	{
+		array[i] = character ? '\0' : 0;
+	}
+
+	return array;
+}
+
+/*
+* Converts a int string to all lower case
+* @param: (int *) string The string you would like to set to lower.
+* @return: (int *) The return string all lower.
+*/
+int * clearIntArray(int * array, int arrayLenght, char character)
+{
+	myLog(1, __FILE__, __LINE__, 1, "Clearing array with length: %i. Character: %i", arrayLenght, character);
+	for (int i = 0; i < arrayLenght; i++)
+	{
+		array[i] = character ? '\0' : 0;
+	}
+
+	return array;
+}
+
+/*
+* Gets the name of a player
+* @param: (char *) returnArray The array you woule like to have it returned to.
+* @return: (char *) The return array.
+*/
+char * getPlayerName(char * returnArray)
+{
+	do
+	{
+		printf("Player name: ");
+		gets(returnArray);
+	}
+	while(!strcmp(returnArray, ""));
+	myLog(1, __FILE__, __LINE__, 1, "Player name: %s", returnArray);
+
+	checkInput(returnArray);
+
+	return returnArray;
+}
+
+/*
+* Checks a string for stop or exit
+* @param: (char *) checkString The string you would like to check.
+* @return: (char) 0, nothing; 1, stop; if the input was exit this wil stop the program.
+*/
+char checkInput(char * checkString)
+{
+	char confirm = 'x'; // y/n input from user
+
+	strtok(checkString, "\n");
+
+	if (!strcmp(toLowerString(checkString), "exit"))
+	{
+		do // Get the user confirmation
+		{
+			printf("Would you like to exit (y/n)?\n");
+			scanf(" %c", &confirm);
+
+			if (confirm == 'n' || confirm == 'N')
+			{
+				printf("Returning to game\n");
+				return 0;
+			}
+			else if (confirm != 'y' && confirm != 'Y')
+			{
+				printf("Invalid input: '%c'!\n", confirm);
+			}
+		}
+		while ((confirm != 'y' && confirm != 'Y') && (confirm != 'n' && confirm != 'N'));
+
+		printf("Exiting on user request.\n");
+		myLog(1, __FILE__, __LINE__, 1, "Program terminated on players request.");
+		exit(EXIT_SUCCESS);
+	}
+
+	if (!strcmp(toLowerString(checkString), "stop"))
+	{
+		myLog(1, __FILE__, __LINE__, 1, "Stop requested.");
+		return 1;
+	}
+
+	return 0;
 }

@@ -2,7 +2,13 @@
 #define __GAME_H__
 
 // Libraries
+#include <string.h>
+#include <ctype.h>
+
 #include "graphicsYahtzee.h"
+
+// Definitions
+#define NAME_LENGTH 50
 
 // Functions
 int * playGame(int * scoreArray);
@@ -16,5 +22,10 @@ char * rollDice(char diceCount, char * returnArray);
 char rollRandomDie(void);
 char rollDie(char n);
 int getUserInput(void);
+char * toLowerString(char* string);
+char * clearCharArray(char * array, int arrayLenght, char character);
+int * clearIntArray(int * array, int arrayLenght, char character);
+char * getPlayerName(char * returnArray);
+char checkInput(char * checkString);
 
 #endif
