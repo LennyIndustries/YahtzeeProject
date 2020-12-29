@@ -489,12 +489,6 @@ char * rollDiceSet(char amountOfDice, char forceKeep, char * returnArray, char r
 {
 	char tempDiceArray[amountOfDice]; // Dice list
 
-	// myLog(1, __FILE__, __LINE__, 1, "Clearing returnArray with length: %i.", returnArrayLength);
-	// for (int i = 0; i < returnArrayLength; i++) // Clearing array to prevent random values
-	// {
-	// 	returnArray[i] = 0;
-	// }
-
 	rollDice(amountOfDice, tempDiceArray); // Rolls x dice
 
 	if (!forceKeep)

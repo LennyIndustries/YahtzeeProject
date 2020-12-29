@@ -23,7 +23,7 @@ typedef enum
 gameState;
 
 int main(void)
-{ // Put in FSM
+{
 	srand(time(NULL)); // Initialize randomness
 
 	/*
@@ -41,7 +41,7 @@ int main(void)
 	* logLevel :: hh:mm:ss - dd/mm/yyyy :: File: FILE_LOCATION (line: LINE IN CODE) :: message
 	* message can be used like printf(), ... "This is a number: %i", 1); will put "This is a number: 1" as message in the log file.
 	*/
-	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 34) :: Opening & clearing log file success.
+	myLog(1, __FILE__, __LINE__, 0, "Opening & clearing log file success."); // -> INFO :: TIME - DATE :: File: .\Yahtzee_Project_Leander_Felix_2020.c (line: 44) :: Opening & clearing log file success.
 
 	int playerOneScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 1 score array
 	int playerTwoScore[MAX_GAMES][MAX_ROUNDS + 1]; // Player 2 score array

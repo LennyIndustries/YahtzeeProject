@@ -23,7 +23,7 @@
 * message can be used like printf(), ... "This is a number: %i", 1); will put "This is a number: 1" as message in the log file.
 */
 void myLog(char logLevel, char * file, int line, char append, const char * message, ...)
-{ // Open qnd close seperqtly, not eacht time the function is called
+{
 	// A big ball of wibbly wobbly, timey wimey stuff.
 	char dateTime[22];
 	time_t myTime = time(NULL);
